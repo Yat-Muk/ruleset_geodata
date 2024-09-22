@@ -3,7 +3,7 @@
 ① Clash geodata 规则集文件，包括：geosite.dat、geoip.dat、Country.mmdb 和 geoip.metadb、ASN.mmdb（仅限 [mihomo 内核](https://github.com/MetaCubeX/mihomo)）等  
 ② [sing-box](https://github.com/SagerNet/sing-box) geodata 规则集文件，包括：geosite.db 和 geoip.db 等
 ## 2. 数据源
-① 每天凌晨 3 点（北京时间 UTC+8）自动构建，根据 [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat) 和 [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) 进行深度定制，可点击查看包含的[域名列表](https://github.com/DustinWin/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/DustinWin/geoip/tree/ips)  
+① 每天凌晨 3 点（北京时间 UTC+8）自动构建，根据 [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat) 和 [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) 进行深度定制，可点击查看包含的[域名列表](https://github.com/Yat-Muk/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/DustinWin/geoip/tree/ips)  
 ② `geosite,fakeip-filter,📌 fakeip 过滤` 源采用 [ShellCrash/public/fake_ip_filter.list](https://github.com/juewuy/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 [sing-box PuerNya 版内核](https://github.com/PuerNya/sing-box/tree/building)时，可使该规则集内的域名走 realip）  
 ③ `geosite,ads,🛑 广告拦截` 源采用 [privacy-protection-tools/anti-AD](https://github.com/privacy-protection-tools/anti-AD)  
 ④ `geosite,private,🔒 私有网络` 源采用 [blackmatrix7/ios_rule_script/Lan](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Lan)（仅域名）和 [TrackersList](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅域名）组合，并添加主流 [Clash dashboard 在线面板](https://github.com/DustinWin/clash_singbox-tools/tree/main/Clash-dashboard)域名（`clash.razord.top`、`clash.metacubex.one`、`yacd.haishan.me`、`yacd.metacubex.one`、`d.metacubex.one`、`metacubex.github.io` 和 `metacubexd.pages.dev`）  
@@ -25,7 +25,7 @@
 ⑳ `geosite,cn,🇨🇳 直连域名` 源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 v2fly/domain-list-community/geolocation-!cn 中带有 `@cn` 的域名）和 [blackmatrix7/ios_rule_script/ChinaMax](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/ChinaMax)（仅域名）  
 ㉑ `geoip,netflix,🎥 奈飞视频` 源采用 [GeoLite2-ASN-CSV/Netflix](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) 和 [blackmatrix7/ios_rule_script/Netflix](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Netflix)（Netflix_IP.txt）组合  
 ㉒ `geoip,telegram,📲 电报消息` 源采用 [GeoLite2-ASN-CSV/Telegram](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) 和 [Telegram IP 段](https://core.telegram.org/resources/cidr.txt)组合  
-㉓ `geoip,private,🔒 私有网络` 源采用 [DustinWin/geoip/config.json](https://github.com/DustinWin/geoip/blob/master/config.json) 中的 `input.type:private` 和 [TrackersList](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅 IP）组合  
+㉓ `geoip,private,🔒 私有网络` 源采用 [Yat-Muk/geoip/config.json](https://github.com/Yat-Muk/geoip/blob/master/config.json) 中的 `input.type:private` 和 [TrackersList](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅 IP）组合  
 ㉔ `geoip,cn,🇨🇳 直连 IP` 源采用 [GeoLite2-Country-CSV/CN](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)、[17mon/china_ip_list](https://github.com/17mon/china_ip_list)、[gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip) 和 [blackmatrix7/ios_rule_script/ChinaASN](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Surge/ChinaASN) 组合
 ## 3. 文件下载
 **规则集文件包含的规则和下载地址对应关系如下表：**
@@ -40,147 +40,147 @@
   <tr>
     <td>geosite-all.dat</td>
     <td><code>fakeip-filter</code>、<code>ads</code>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>netflix</code>、<code>disney</code>、<code>max</code>、<code>primevideo</code>、<code>appletv</code>、<code>youtube</code>、<code>tiktok</code>、<code>bilibili</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-all.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite-all.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-all.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all.db</td>
     <td><code>fakeip-filter</code>、<code>ads</code>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>netflix</code>、<code>disney</code>、<code>max</code>、<code>primevideo</code>、<code>appletv</code>、<code>youtube</code>、<code>tiktok</code>、<code>bilibili</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-all.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geosite-all.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-all.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-all.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geosite-all.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-all.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all-lite.dat</td>
     <td><code>fakeip-filter</code>、<del><code>ads</code></del>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>netflix</code>、<code>disney</code>、<code>max</code>、<code>primevideo</code>、<code>appletv</code>、<code>youtube</code>、<code>tiktok</code>、<code>bilibili</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-all-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite-all-lite.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-all-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all-lite.db</td>
     <td><code>fakeip-filter</code>、<del><code>ads</code></del>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>netflix</code>、<code>disney</code>、<code>max</code>、<code>primevideo</code>、<code>appletv</code>、<code>youtube</code>、<code>tiktok</code>、<code>bilibili</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-all-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geosite-all-lite.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-all-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite.dat</td>
     <td><code>fakeip-filter</code>、<code>ads</code>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite.db</td>
     <td><code>fakeip-filter</code>、<code>ads</code>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geosite.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geosite.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-lite.dat</td>
     <td><code>fakeip-filter</code>、<del><code>ads</code></del>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geosite-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-lite.db</td>
     <td><code>fakeip-filter</code>、<del><code>ads</code></del>、<code>private</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>ai</code>、<code>networktest</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geosite-lite.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geosite-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.dat</td>
     <td rowspan="4" align="center"><a href="https://github.com/Loyalsoldier/geoip/tree/release/text">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-all.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip-all.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-all.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-all.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-all.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-all.mmdb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-all.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-all.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip-all.metadb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-all.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip-all.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geoip-all.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip-all.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip-all.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geoip-all.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip-all.db">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-ASN-all.mmdb</td>
     <td><code>cloudflare</code></del>、<code>cloudfront</code>、<code>facebook</code>、<code>fastly</code>、<code>google</code>、<code>netflix</code>、<code>telegram</code> 和 <code>twitter</code>，具体可<a href="https://github.com/Loyalsoldier/geoip/blob/master/asn.csv">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-ASN-all.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-ASN-all.mmdb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-ASN-all.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.dat</td>
     <td rowspan="4"><code>netflix</code>、<code>telegram</code>、<code>private</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country.mmdb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country.mmdb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.metadb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.metadb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geoip.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geoip.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.dat</td>
     <td rowspan="4"><del><code>netflix</code></del>、<code>telegram</code>、<code>private</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip-lite.dat">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-lite.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-lite.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-lite.mmdb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-lite.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-lite.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip-lite.metadb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/geoip-lite.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geoip-lite.db">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box/geoip-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-ASN.mmdb</td>
-    <td><code>netflix</code>、<code>telegram</code>、<del><code>private</code> 和 <code>cn</code></del>，具体可<a href="https://github.com/DustinWin/geoip/blob/master/asn.csv">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-ASN.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-ASN.mmdb">点此下载</a></td>
-    <td><a href="https://mirror.ghproxy.com/https://github.com/DustinWin/ruleset_geodata/releases/download/clash/Country-ASN.mmdb">点此下载</a></td>
+    <td><code>netflix</code>、<code>telegram</code>、<del><code>private</code> 和 <code>cn</code></del>，具体可<a href="https://github.com/Yat-Muk/geoip/blob/master/asn.csv">点此查看</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-ASN.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-ASN.mmdb">点此下载</a></td>
+    <td><a href="https://mirror.ghproxy.com/https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash/Country-ASN.mmdb">点此下载</a></td>
   </tr>
 </table>
 
@@ -191,15 +191,15 @@
 连接 SSH 后执行如下命令：
 ```
 # 适用于 Clash 内核
-curl -o $CRASHDIR/GeoSite.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite.dat
-curl -o $CRASHDIR/GeoIP.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.dat
-curl -o $CRASHDIR/Country.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country.mmdb
+curl -o $CRASHDIR/GeoSite.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite.dat
+curl -o $CRASHDIR/GeoIP.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.dat
+curl -o $CRASHDIR/Country.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country.mmdb
 # 适用于 mihomo 内核
-curl -o $CRASHDIR/geoip.metadb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.metadb
-curl -o $CRASHDIR/ASN.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-ASN.mmdb
+curl -o $CRASHDIR/geoip.metadb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.metadb
+curl -o $CRASHDIR/ASN.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-ASN.mmdb
 # 适用于 sing-box 内核
-curl -o $CRASHDIR/geosite.db -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geosite.db
-curl -o $CRASHDIR/geoip.db -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box/geoip.db
+curl -o $CRASHDIR/geosite.db -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geosite.db
+curl -o $CRASHDIR/geoip.db -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box/geoip.db
 $CRASHDIR/start.sh restart
 ```
 </details>
@@ -211,11 +211,11 @@ $CRASHDIR/start.sh restart
 taskkill /f /t /im "Clash Verge*"
 taskkill /f /t /im clash-verge*
 taskkill /f /t /im verge-mihomo*
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geosite.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geosite.dat
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.dat
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\Country.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country.mmdb
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.metadb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/geoip.metadb
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@clash/Country-ASN.mmdb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geosite.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geosite.dat
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.dat
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\Country.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country.mmdb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.metadb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/geoip.metadb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@clash/Country-ASN.mmdb
 ```
 </details>
 
@@ -224,7 +224,7 @@ curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://
 ① Clash ruleset 规则集文件，格式为 `.yaml`（`format: yaml`）、`.list`（`format: text`） 和 `.mrs`（`format: mrs`）  
 ② [sing-box](https://github.com/SagerNet/sing-box) ruleset 规则集文件，格式有 `.srs`（`"format": "binary"`）和 `.json`（`"format": "source"`）
 ## 2. 数据源
-① 每天凌晨 3 点（北京时间 UTC+8）自动构建，根据 [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules) 和 [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) 进行深度定制，可点击查看包含的[域名列表](https://github.com/DustinWin/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/DustinWin/geoip/tree/ips)  
+① 每天凌晨 3 点（北京时间 UTC+8）自动构建，根据 [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules) 和 [Loyalsoldier/geoip](https://github.com/Loyalsoldier/geoip) 进行深度定制，可点击查看包含的[域名列表](https://github.com/Yat-Muk/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/Yat-Muk/geoip/tree/ips)  
 ② `rule-set,fakeip-filter,📌 fakeip 过滤` 源采用 [ShellCrash/public/fake_ip_filter.list](https://github.com/juewuy/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 sing-box PuerNya 版内核时，可使该规则集内的域名走 realip）  
 ③ `rule-set,ads,🛑 广告拦截` 源采用 [privacy-protection-tools/anti-AD](https://github.com/privacy-protection-tools/anti-AD)  
 ④ `rule-set,applications,🖥️ 直连软件` 源采用 [blackmatrix7/ios_rule_script/Download](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Download) 和 [Loyalsoldier/clash-rules/applications.txt](https://github.com/Loyalsoldier/clash-rules/blob/release/applications.txt) 组合  
@@ -247,7 +247,7 @@ curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://
 ㉑ `rule-set,cn,🇨🇳 直连域名` 源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 v2fly/domain-list-community/geolocation-!cn 中带有 `@cn` 的域名）和 [blackmatrix7/ios_rule_script/ChinaMax](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/ChinaMax)（仅域名）  
 ㉒ `rule-set,netflixip,🎥 奈飞视频` 源采用 [GeoLite2-ASN-CSV/Netflix](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) 和 [blackmatrix7/ios_rule_script/Netflix](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Netflix)（Netflix_IP.txt）组合  
 ㉓ `rule-set,telegramip,📲 电报消息` 源采用 [GeoLite2-ASN-CSV/Telegram](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) 和 [Telegram IP 段](https://core.telegram.org/resources/cidr.txt)组合  
-㉔ `rule-set,privateip,🔒 私有网络` 源采用 [DustinWin/geoip/config.json](https://github.com/DustinWin/geoip/blob/master/config.json) 中的 `input.type:private` 和 [TrackersList](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅 IP）组合  
+㉔ `rule-set,privateip,🔒 私有网络` 源采用 [Yat-Muk/geoip/config.json](https://github.com/Yat-Muk/geoip/blob/master/config.json) 中的 `input.type:private` 和 [TrackersList](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅 IP）组合  
 ㉕ `rule-set,cnip,🇨🇳 直连 IP` 源采用 [GeoLite2-Country-CSV/CN](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)、[17mon/china_ip_list](https://github.com/17mon/china_ip_list)、[gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip) 和 [blackmatrix7/ios_rule_script/ChinaASN](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Surge/ChinaASN) 组合
 ## 3. 文件使用
 <details>
@@ -288,7 +288,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/fakeip-filter.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/fakeip-filter.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/fakeip-filter.mrs"
     interval: 86400
 
   ads:
@@ -296,7 +296,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ads.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/ads.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/ads.mrs"
     interval: 86400
 
   applications:
@@ -304,7 +304,7 @@ rule-providers:
     behavior: classical
     format: text
     path: ./rules/applications.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/applications.list"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/applications.list"
     interval: 86400
 
   private:
@@ -312,7 +312,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/private.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/private.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/private.mrs"
     interval: 86400
 
   microsoft-cn:
@@ -320,7 +320,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/microsoft-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/microsoft-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/microsoft-cn.mrs"
     interval: 86400
 
   apple-cn:
@@ -328,7 +328,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/apple-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/apple-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/apple-cn.mrs"
     interval: 86400
 
   google-cn:
@@ -336,7 +336,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/google-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/google-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/google-cn.mrs"
     interval: 86400
 
   games-cn:
@@ -344,7 +344,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/games-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/games-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/games-cn.mrs"
     interval: 86400
 
   netflix:
@@ -352,7 +352,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/netflix.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/netflix.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/netflix.mrs"
     interval: 86400
 
   disney:
@@ -360,7 +360,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/disney.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/disney.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/disney.mrs"
     interval: 86400
 
   max:
@@ -368,7 +368,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/max.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/max.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/max.mrs"
     interval: 86400
 
   primevideo:
@@ -376,7 +376,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/primevideo.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/primevideo.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/primevideo.mrs"
     interval: 86400
 
   appletv:
@@ -384,7 +384,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/appletv.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/appletv.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/appletv.mrs"
     interval: 86400
 
   youtube:
@@ -392,7 +392,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/youtube.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/youtube.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/youtube.mrs"
     interval: 86400
 
   tiktok:
@@ -400,7 +400,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/tiktok.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/tiktok.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/tiktok.mrs"
     interval: 86400
 
   bilibili:
@@ -408,7 +408,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/bilibili.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/bilibili.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/bilibili.mrs"
     interval: 86400
 
   ai:
@@ -416,7 +416,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ai.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/ai.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/ai.mrs"
     interval: 86400
 
   networktest:
@@ -424,7 +424,7 @@ rule-providers:
     behavior: classical
     format: text
     path: ./rules/networktest.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/networktest.list"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/networktest.list"
     interval: 86400
 
   proxy:
@@ -432,7 +432,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/proxy.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/proxy.mrs"
     interval: 86400
 
   cn:
@@ -440,7 +440,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/cn.mrs"
     interval: 86400
 
   netflixip:
@@ -448,7 +448,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/netflixip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/netflixip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/netflixip.mrs"
     interval: 86400
 
   telegramip:
@@ -456,7 +456,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/telegramip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/telegramip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/telegramip.mrs"
     interval: 86400
 
   privateip:
@@ -464,7 +464,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/privateip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/privateip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/privateip.mrs"
     interval: 86400
 
   cnip:
@@ -472,7 +472,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/cnip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/clash-ruleset/cnip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/clash-ruleset/cnip.mrs"
     interval: 86400
 
 rules:
@@ -570,168 +570,168 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/fakeip-filter.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter.srs"
       },
       {
         "tag": "ads",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/ads.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ads.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/ads.srs"
       },
       {
         "tag": "applications",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/applications.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/applications.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/applications.srs"
       },
       {
         "tag": "private",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/private.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
       },
       {
         "tag": "microsoft-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/microsoft-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
       },
       {
         "tag": "apple-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/apple-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
       },
       {
         "tag": "google-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/google-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/google-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/google-cn.srs"
       },
       {
         "tag": "games-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/games-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/games-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/games-cn.srs"
       },
       {
         "tag": "netflix",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/netflix.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflix.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/netflix.srs"
       },
       {
         "tag": "disney",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/disney.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/disney.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/disney.srs"
       },
       {
         "tag": "max",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/max.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/max.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/max.srs"
       },
       {
         "tag": "primevideo",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/primevideo.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/primevideo.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/primevideo.srs"
       },
       {
         "tag": "appletv",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/appletv.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/appletv.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/appletv.srs"
       },
       {
         "tag": "youtube",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/youtube.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/youtube.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/youtube.srs"
       },
       {
         "tag": "tiktok",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/tiktok.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/tiktok.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/tiktok.srs"
       },
       {
         "tag": "bilibili",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/bilibili.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/bilibili.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/bilibili.srs"
       },
       {
         "tag": "ai",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/ai.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
       },
       {
         "tag": "networktest",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/networktest.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/networktest.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/networktest.srs"
       },
       {
         "tag": "proxy",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/proxy.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
       },
       {
         "tag": "cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
       },
       {
         "tag": "netflixip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/netflixip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
       },
       {
         "tag": "telegramip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/telegramip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
       },
       {
         "tag": "privateip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/privateip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs"
       },
       {
         "tag": "cnip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/cnip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
       }
     ]
   }
