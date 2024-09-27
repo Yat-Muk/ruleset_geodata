@@ -212,7 +212,7 @@ jobs:
         run: |
           cd ./tools/
           chmod +x convert.sh && ./convert.sh
-          rm -rf ./sing-box* ./rules*
+          rm -rf ./sing-box*
           mv -f ./*.json ./*.srs ../sing-box-ruleset/
 
       - name: Download and unzip `sing-box` core(compatible)
