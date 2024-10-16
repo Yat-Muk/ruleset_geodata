@@ -58,11 +58,11 @@ jobs:
       - name: Generate `clash` geodata
         run: |
           mkdir -p ./community/mydata/
-          archs1=(ads private microsoft-cn apple-cn google-cn games-cn ai networktest netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
-          archs2=(ads private microsoft-cn apple-cn google-cn games-cn ai networktest proxy cn)
+          archs1=(lan ads private microsoft-cn apple-cn google-cn games-cn ai networktest netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
+          archs2=(lan ads private microsoft-cn apple-cn google-cn games-cn ai networktest proxy cn)
 
           # Generate `clash` geosite-all.dat
-          for ((i = 0; i < 34; i++)); do
+          for ((i = 0; i < 35; i++)); do
             curl -sSL "${domains_download_url}/${archs1[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' > "./community/mydata/${archs1[i]}"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' -e 's/^DOMAIN-REGEX,/regexp:/' > ./community/mydata/fakeip-filter
@@ -75,7 +75,7 @@ jobs:
 
           # Generate `clash` geosite.dat
           rm -f ./mydata/*
-          for ((i = 0; i < 10; i++)); do
+          for ((i = 0; i < 11; i++)); do
             curl -sSL "${domains_download_url}/${archs2[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' > "./mydata/${archs2[i]}"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' -e 's/^DOMAIN-REGEX,/regexp:/' > ./mydata/fakeip-filter
@@ -118,9 +118,10 @@ jobs:
           domains=(ads private microsoft-cn apple-cn google-cn games-cn ai netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
           archs=(applications networktest)
           ips=(netflixip telegramip privateip cnip)
+          lan=(lan)
 
           # Generate `clash` rule-set (yaml)
-          for ((i = 0; i < 33; i++)); do
+          for ((i = 0; i < 34; i++)); do
             echo 'payload:' > "./clash-ruleset/${domains[i]}.yaml"
             curl -sSL "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/  - '+\./" -e "s/$/'/" >> "./clash-ruleset/${domains[i]}.yaml"
           done
@@ -137,8 +138,13 @@ jobs:
             curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,/  - '/" -e "s/^IP-CIDR6,/  - '/" -e "s/$/'/" >> "./clash-ruleset/${ips[i]}.yaml"
           done
 
+          for ((i = 0; i < 1; i++)); do
+            echo 'payload:' > "./clash-ruleset/lan.yaml"
+            curl -sSL "${lan_download_url}/lan.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,/  - '/" -e "s/^IP-CIDR6,/ | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/ - '/" -e "s/$/'/" >> "./clash-ruleset/lan.yaml"
+          done
+
           # Generate `clash` rule-set (text)
-          for ((i = 0; i < 33; i++)); do
+          for ((i = 0; i < 34; i++)); do
             curl -sSL "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./clash-ruleset/${domains[i]}.list"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' -e 's/^DOMAIN-REGEX,//' -e 's/^\.//' > ./clash-ruleset/fakeip-filter.list
@@ -151,8 +157,12 @@ jobs:
             curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./clash-ruleset/${ips[i]}.list"
           done
 
+          for ((i = 0; i < 1; i++)); do
+            curl -sSL "${lan_download_url}/lan.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,//' -e 's/^IP-CIDR6,//' | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./clash-ruleset/lan.list"
+          done
+
           # Ready for generate `clash` rule-set (mrs)
-          for ((i = 0; i < 33; i++)); do
+          for ((i = 0; i < 34; i++)); do
             mkdir -p "./tools/domains/${domains[i]}/"
             curl "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./tools/domains/${domains[i]}/${domains[i]}.list"
           done
@@ -161,11 +171,16 @@ jobs:
 
           for ((i = 0; i < 4; i++)); do
             mkdir -p "./tools/ips/${ips[i]}/"
-            curl -sSL "${ips_download_url}/${ips[i]}.list"| grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./tools/ips/${ips[i]}/${ips[i]}.list"
+            curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./tools/ips/${ips[i]}/${ips[i]}.list"
+          done
+
+          for ((i = 0; i < 1; i++)); do
+            mkdir -p "./tools/lan/lan/"
+            curl -sSL "${lan_download_url}/lan.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,//' -e 's/^IP-CIDR6,//' | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./tools/lan/lan/lan.list"
           done
 
           # Ready for generate `sing-box` rule_set
-          for ((i = 0; i < 33; i++)); do
+          for ((i = 0; i < 34; i++)); do
             mkdir -p "./tools/rules/${domains[i]}/"
             curl "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' > "./tools/rules/${domains[i]}/${domains[i]}.yaml"
           done
@@ -180,6 +195,11 @@ jobs:
           for ((i = 0; i < 4; i++)); do
             mkdir -p "./tools/rules/${ips[i]}/"
             curl -sSL "${ips_download_url}/${ips[i]}.list"| grep 'IP-CIDR' > "./tools/rules/${ips[i]}/${ips[i]}.yaml"
+          done
+
+          for ((i = 0; i < 1; i++)); do
+            mkdir -p "./tools/rules/lan/"
+            curl -sSL "${ips_download_url}/lan.list"| grep 'IP-CIDR' | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' > "./tools/rules/lan/lan.yaml"
           done
 
       - name: Download and unzip `mihomo` core
@@ -200,11 +220,16 @@ jobs:
           for ((i = 0; i < ${#list[@]}; i++)); do
             ./mihomo convert-ruleset ipcidr text "./ips/${list[i]}/${list[i]}.list" ../clash-ruleset/${list[i]}.mrs
           done
-          rm -rf ./mihomo* ./domains/ ./ips/
+
+          list=($(ls ./lan/))
+          for ((i = 0; i < ${#list[@]}; i++)); do
+            ./mihomo convert-ruleset ipcidr text "./ips/${list[i]}/${list[i]}.list" ../clash-ruleset/${list[i]}.mrs
+          done
+          rm -rf ./mihomo* ./domains/ ./ips/ ./lan/
 
       - name: Download and unzip `sing-box` core
         run: |
-          sing_box_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases | grep 'tag_name' | grep 'beta' | head -n 1 | sed -e 's/.*v//' -e 's/".*//')
+          sing_box_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases | grep 'tag_name' | grep -v 'rc' | head -n 1 | sed -e 's/.*v//' -e 's/".*//')
           wget "https://github.com/SagerNet/sing-box/releases/download/v${sing_box_version}/sing-box-${sing_box_version}-linux-amd64.tar.gz" -O - | tar -zxf - -C ./tools/
           mv -f ./tools/sing-box-${sing_box_version}-linux-amd64/sing-box ./tools/
 
@@ -215,18 +240,18 @@ jobs:
           rm -rf ./sing-box*
           mv -f ./*.json ./*.srs ../sing-box-ruleset/
 
-      - name: Download and unzip `sing-box` core(compatible)
-        run: |
-          sing_box_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases | grep 'tag_name' | grep -v 'beta' | head -n 1 | sed -e 's/.*v//' -e 's/".*//')
-          wget "https://github.com/SagerNet/sing-box/releases/download/v${sing_box_version}/sing-box-${sing_box_version}-linux-amd64.tar.gz" -O - | tar -zxf - -C ./tools/
-          mv -f ./tools/sing-box-${sing_box_version}-linux-amd64/sing-box ./tools/
+     # - name: Download and unzip `sing-box` core(compatible)
+     #   run: |
+     #     sing_box_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases | grep 'tag_name' | grep -v 'beta' | head -n 1 | sed -e 's/.*v//' -e 's/".*//')
+     #     wget "https://github.com/SagerNet/sing-box/releases/download/v${sing_box_version}/sing-box-${sing_box_version}-linux-amd64.tar.gz" -O - | tar -zxf - -C ./tools/
+     #     mv -f ./tools/sing-box-${sing_box_version}-linux-amd64/sing-box ./tools/
           
-      - name: Generate `sing-box` rule_set(compatible)
-        run: |
-          cd ./tools/
-          chmod +x ./convert_compatible.sh && ./convert_compatible.sh
-          rm -rf ./sing-box* ./rules*
-          mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
+     # - name: Generate `sing-box` rule_set(compatible)
+     #   run: |
+     #     cd ./tools/
+     #     chmod +x ./convert_compatible.sh && ./convert_compatible.sh
+     #     rm -rf ./sing-box* ./rules*
+     #     mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
 
       - name: Release and upload `clash` assets
         uses: svenstaro/upload-release-action@v2
@@ -318,27 +343,27 @@ jobs:
           git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push -f -u origin sing-box-ruleset
 
-      - name: Release and upload `sing-box-ruleset-compatible` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: sing-box-ruleset-compatible
-          tag: sing-box-ruleset-compatible
-          overwrite: true
-          body: "sing-box ruleset v1 规则集文件，包含 .srs 和 .json 格式"
-          file_glob: true
-          file: ./sing-box-ruleset-compatible/*
+    #  - name: Release and upload `sing-box-ruleset-compatible` assets
+    #    uses: svenstaro/upload-release-action@v2
+    #    with:
+    #      repo_token: ${{ secrets.GITHUB_TOKEN }}
+    #      release_name: sing-box-ruleset-compatible
+    #      tag: sing-box-ruleset-compatible
+    #      overwrite: true
+    #      body: "sing-box ruleset v1 规则集文件，包含 .srs 和 .json 格式"
+    #      file_glob: true
+    #      file: ./sing-box-ruleset-compatible/*
 
-      - name: Commit and push `sing-box-ruleset-compatible` branch
-        run: |
-          cd ./sing-box-ruleset-compatible/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b sing-box-ruleset-compatible
-          git add . && git commit -m "sing-box rule_set 规则集文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f -u origin sing-box-ruleset-compatible
+    #  - name: Commit and push `sing-box-ruleset-compatible` branch
+    #    run: |
+    #      cd ./sing-box-ruleset-compatible/ || exit 1
+    #      git init
+    #      git config --local user.email "github-actions[bot]@users.noreply.github.com"
+    #      git config --local user.name "github-actions[bot]"
+    #      git checkout -b sing-box-ruleset-compatible
+    #      git add . && git commit -m "sing-box rule_set 规则集文件更新于 ${update_version}"
+    #      git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+    #      git push -f -u origin sing-box-ruleset-compatible
 
       - name: Purge jsDelivr CDN
         run: |
@@ -358,10 +383,10 @@ jobs:
           for file in $(ls); do
             curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset/${file}"
           done
-          cd ../sing-box-ruleset-compatible/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"
-          done
+     #     cd ../sing-box-ruleset-compatible/ || exit 1
+     #     for file in $(ls); do
+     #       curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"
+     #    done
 
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
