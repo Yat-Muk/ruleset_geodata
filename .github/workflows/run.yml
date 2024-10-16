@@ -58,11 +58,11 @@ jobs:
       - name: Generate `clash` geodata
         run: |
           mkdir -p ./community/mydata/
-          archs1=(lan ads private microsoft-cn apple-cn google-cn games-cn ai networktest netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
-          archs2=(lan ads private microsoft-cn apple-cn google-cn games-cn ai networktest proxy cn)
+          archs1=(ads private microsoft-cn apple-cn google-cn games-cn ai networktest netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
+          archs2=(ads private microsoft-cn apple-cn google-cn games-cn ai networktest proxy cn)
 
           # Generate `clash` geosite-all.dat
-          for ((i = 0; i < 35; i++)); do
+          for ((i = 0; i < 34; i++)); do
             curl -sSL "${domains_download_url}/${archs1[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' > "./community/mydata/${archs1[i]}"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' -e 's/^DOMAIN-REGEX,/regexp:/' > ./community/mydata/fakeip-filter
@@ -75,7 +75,7 @@ jobs:
 
           # Generate `clash` geosite.dat
           rm -f ./mydata/*
-          for ((i = 0; i < 11; i++)); do
+          for ((i = 0; i < 10; i++)); do
             curl -sSL "${domains_download_url}/${archs2[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' > "./mydata/${archs2[i]}"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,/full:/' -e 's/^DOMAIN-SUFFIX,//' -e 's/^DOMAIN-KEYWORD,/keyword:/' -e 's/^DOMAIN-REGEX,/regexp:/' > ./mydata/fakeip-filter
@@ -114,15 +114,15 @@ jobs:
 
       - name: Generate `clash` rule-set
         run: |
-          mkdir -p ./clash-ruleset/ ./sing-box-ruleset/
-          domains=(lan ads private microsoft-cn apple-cn google-cn games-cn ai netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
+          mkdir -p ./clash-ruleset/ ./sing-box-ruleset/ ./sing-box-ruleset-compatible/
+          domains=(ads private microsoft-cn apple-cn google-cn games-cn ai netflix disney max primevideo appletv youtube tiktok bilibili proxy cn adobe hulu telegram youtubemusic twitter github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat custom)
           archs=(applications networktest)
           ips=(netflixip telegramip privateip cnip)
 
           # Generate `clash` rule-set (yaml)
-          for ((i = 0; i < 34; i++)); do
+          for ((i = 0; i < 33; i++)); do
             echo 'payload:' > "./clash-ruleset/${domains[i]}.yaml"
-            curl -sSL "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/  - '+\./" -e "s/$/'/" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,/  - '/" -e "s/^IP-CIDR6,/  - '/" >> "./clash-ruleset/${domains[i]}.yaml"
+            curl -sSL "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/  - '+\./" -e "s/$/'/" >> "./clash-ruleset/${domains[i]}.yaml"
           done
           echo 'payload:' > "./clash-ruleset/fakeip-filter.yaml"
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/  - '+\./" -e "s/^DOMAIN-REGEX,/  - '/" -e "s/'\./'/" -e "s/$/'/" >> ./clash-ruleset/fakeip-filter.yaml
@@ -137,12 +137,8 @@ jobs:
             curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,/  - '/" -e "s/^IP-CIDR6,/  - '/" -e "s/$/'/" >> "./clash-ruleset/${ips[i]}.yaml"
           done
 
-          echo 'payload:' > "./clash-ruleset/lan.yaml"
-          curl -sSL "${domains_download_url}/lan.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e "s/^DOMAIN,/  - '/" -e "s/^DOMAIN-SUFFIX,/  - '+\./" -e "s/$/'/" >> "./clash-ruleset/lan.yaml"
-          curl -sSL "${ips_download_url}/lan.list" | grep 'IP-CIDR' | sed -e "s/^IP-CIDR,/  - '/" -e "s/^IP-CIDR6,/  - '/" -e "s/$/'/" >> "./clash-ruleset/lan.yaml"
-
           # Generate `clash` rule-set (text)
-          for ((i = 0; i < 34; i++)); do
+          for ((i = 0; i < 33; i++)); do
             curl -sSL "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./clash-ruleset/${domains[i]}.list"
           done
           curl -sSL "${domains_download_url}/fakeip-filter.list" | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' -e 's/^DOMAIN-REGEX,//' -e 's/^\.//' > ./clash-ruleset/fakeip-filter.list
@@ -155,11 +151,8 @@ jobs:
             curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./clash-ruleset/${ips[i]}.list"
           done
 
-          curl -sSL "${domains_download_url}/lan.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./clash-ruleset/lan.list"
-          curl -sSL "${ips_download_url}/lan.list" | grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' >> "./clash-ruleset/lan.list"
-
           # Ready for generate `clash` rule-set (mrs)
-          for ((i = 0; i < 34; i++)); do
+          for ((i = 0; i < 33; i++)); do
             mkdir -p "./tools/domains/${domains[i]}/"
             curl "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,' | sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/+\./' > "./tools/domains/${domains[i]}/${domains[i]}.list"
           done
@@ -168,11 +161,11 @@ jobs:
 
           for ((i = 0; i < 4; i++)); do
             mkdir -p "./tools/ips/${ips[i]}/"
-            curl -sSL "${ips_download_url}/${ips[i]}.list" | grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./tools/ips/${ips[i]}/${ips[i]}.list"
+            curl -sSL "${ips_download_url}/${ips[i]}.list"| grep 'IP-CIDR' | sed -e 's/^IP-CIDR,//' -e 's/^IP-CIDR6,//' > "./tools/ips/${ips[i]}/${ips[i]}.list"
           done
 
           # Ready for generate `sing-box` rule_set
-          for ((i = 0; i < 34; i++)); do
+          for ((i = 0; i < 33; i++)); do
             mkdir -p "./tools/rules/${domains[i]}/"
             curl "${domains_download_url}/${domains[i]}.list" | grep -E 'DOMAIN,|DOMAIN-SUFFIX,|DOMAIN-KEYWORD' > "./tools/rules/${domains[i]}/${domains[i]}.yaml"
           done
@@ -207,7 +200,6 @@ jobs:
           for ((i = 0; i < ${#list[@]}; i++)); do
             ./mihomo convert-ruleset ipcidr text "./ips/${list[i]}/${list[i]}.list" ../clash-ruleset/${list[i]}.mrs
           done
-
           rm -rf ./mihomo* ./domains/ ./ips/
 
       - name: Download and unzip `sing-box` core
