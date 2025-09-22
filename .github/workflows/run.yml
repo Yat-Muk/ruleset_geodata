@@ -158,8 +158,7 @@ jobs:
       - name: Download `mihomo` rule-set files
         run: |
           mkdir -p ./mihomo-ruleset/
-          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv youtube tiktok bilibili spotify media games ai tld-proxy gfw proxy cn cn-lite)
-          archs=(applications networktest)
+          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite)
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
 
           for domain in "${domains[@]}"; do
@@ -183,10 +182,7 @@ jobs:
           sort --ignore-case ./tmp/temp-private-domains.txt >> ./tools/domains/private/private.list
           rm -f ./tmp/*
 
-          for arch in "${archs[@]}"; do
-            mkdir -p "./tools/rules/${arch}/"
-            curl -sSL "${domains_download_url}/${arch}.list" > "./mihomo-ruleset/${arch}.list"
-          done
+          curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
@@ -195,8 +191,7 @@ jobs:
 
       - name: Download `sing-box` rule_set files
         run: |
-          domains=(private ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv youtube tiktok bilibili spotify media games ai tld-proxy gfw proxy cn cn-lite)
-          archs=(applications networktest)
+          domains=(private ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite)
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
 
           for domain in "${domains[@]}"; do
@@ -223,10 +218,8 @@ jobs:
           sort --ignore-case ./tmp/temp-fakeip-filter-lite-rules.txt > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
           rm -rf ./tmp*
 
-          for arch in "${archs[@]}"; do
-            mkdir -p "./tools/rules/${arch}/"
-            curl -sSL "${domains_download_url}/${arch}.list" > "./tools/rules/${arch}/${arch}.list"
-          done
+          mkdir -p ./tools/rules/applications/
+          curl -sSL "${domains_download_url}/applications.list" > "./tools/rules/applications/applications.list"
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
