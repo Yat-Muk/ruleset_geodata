@@ -1589,7 +1589,7 @@ rules:
   </tr>
   <tr>
     <td>DustinWin_Blacklist.ini</td>
-    <td>黑名单模式规则，GFW 模式，包含 gfw 分流</td>
+    <td>黑名单模式规则，GFW 模式，包含 <code>gfw</code> 分流</td>
     <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
     <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
     <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
@@ -1600,6 +1600,13 @@ rules:
     <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
     <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
     <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
+  </tr>
+  <tr>
+    <td>DustinWin_Blacklist_BestCF.ini</td>
+    <td>Cloudflare 优选专用黑名单模式规则，GFW 模式但去掉了广告规则集且仅适用于 <a href="https://github.com/DustinWin/BestCF">Cloudflare 优选</a>项目</td>
+    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
   </tr>
   <tr>
     <td>DustinWin_Light.ini</td>
