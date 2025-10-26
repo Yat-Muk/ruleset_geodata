@@ -175,7 +175,7 @@ jobs:
              rm -f "./tools/domains/fakeip-filter/fakeip-filter.list"
              rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter/"
           fi
-          
+
           mkdir -p ./tools/domains/fakeip-filter-lite/
            curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | \
             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
@@ -202,14 +202,13 @@ jobs:
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
-            # v-- 修正點: 移除 'local' --v
-            download_source_url="" 
+            download_source_url=""
             if [[ "$ip" == "adsip" ]]; then
               download_source_url="${domains_download_url}/${ip}.list"
             else
               download_source_url="${ips_download_url}/${ip}.list"
             fi
-            
+
             curl -sSL "${download_source_url}" | \
               grep -E '^(IP-CIDR,|IP-CIDR6,)' | \
               sed 's/^IP-CIDR,\|^IP-CIDR6,//' \
@@ -221,11 +220,12 @@ jobs:
                rmdir --ignore-fail-on-non-empty "./tools/ips/${ip}/"
             fi
           done
-          
+
           rm -rf ./tmp/
 
       - name: Download `sing-box` rule_set files
         run: |
+          mkdir -p ./tmp/ # Ensure tmp directory exists
           domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
 
@@ -233,7 +233,7 @@ jobs:
             mkdir -p "./tools/rules/${domain}/"
             curl -sSL "${domains_download_url}/${domain}.list" > "./tools/rules/${domain}/${domain}.list"
           done
-          
+
           mkdir -p ./tools/rules/fakeip-filter/
           curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' > ./tmp/temp-fakeip-filter-rules.txt
           cat <<EOF >> ./tmp/temp-fakeip-filter-rules.txt
@@ -252,14 +252,13 @@ jobs:
           DOMAIN-KEYWORD,time
           EOF
           sort --ignore-case ./tmp/temp-fakeip-filter-lite-rules.txt > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
-          
+
           mkdir -p ./tools/rules/applications/
           curl -sSL "${domains_download_url}/applications.list" > "./tools/rules/applications/applications.list"
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
-            # v-- 修正點: 移除 'local' --v
-            download_source_url="" 
+            download_source_url=""
             if [[ "$ip" == "adsip" ]]; then
               download_source_url="${domains_download_url}/${ip}.list"
             else
@@ -267,18 +266,18 @@ jobs:
             fi
             curl -sSL "${download_source_url}" > "./tools/rules/${ip}/${ip}.list"
           done
-          
+
           rm -rf ./tmp*
 
       - name: Generate `mihomo` rule-set (yaml)
         run: |
           set -eo pipefail
-          
+
           mkdir -p ./mihomo-ruleset-yaml/
-          
+
           domains=(trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
-          
+
           generate_yaml_ruleset() {
             local item_name=$1
             local download_url=$2
@@ -314,7 +313,7 @@ jobs:
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
-          
+
           generate_merged_ads_ruleset() {
             echo "Generating MERGED YAML ruleset for: ads"
             local item_name="ads"
@@ -357,8 +356,7 @@ jobs:
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
           for item in "${ips[@]}"; do
-             # adsip.list is now handled by generate_merged_ads_ruleset
-             if [[ "$item" != "adsip" ]]; then 
+             if [[ "$item" != "adsip" ]]; then # adsip is handled by merge function
                generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
              fi
           done
@@ -370,18 +368,16 @@ jobs:
           mv -f ./tools/CrashCore ./tools/mihomo
           cd ./tools/
           chmod +x ./mihomo
-          
+
           domain_files=($(find ./domains/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
           for file_path in "${domain_files[@]}"; do
              dir_name=$(basename $(dirname "$file_path"))
-             # 跳過空的 list 文件以防 panic
              if [ -s "$file_path" ]; then
                 echo "Converting domain ruleset: ${dir_name}"
                 ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
              else
                 echo "Skipping empty domain list file: $file_path"
              fi
-             # 即使轉換失敗或跳過，也移動 list 文件
              mv -f "$file_path" ../mihomo-ruleset/
           done
 
@@ -396,13 +392,12 @@ jobs:
              fi
              mv -f "$file_path" ../mihomo-ruleset/
           done
-          
+
           find ./domains/ ./ips/ -maxdepth 1 -mindepth 1 -type d -empty -delete 2>/dev/null
           rm -rf ./mihomo* ./domains/ ./ips/
 
       - name: Generate `sing-box` rule_set (srs) and move .json files
         run: |
-          # The rest of the script remains the same as your last correct version
           if [[ "${{ env.singbox_core_last1_version }}" == "${{ env.singbox_core_release_version }}" ]]; then
             echo "singbox_core_old_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last1_version }}" >> $GITHUB_ENV
@@ -414,9 +409,15 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
             cd ./tools/
-            sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-            chmod +x ./convert.sh && ./convert.sh
-            mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
+            # Assuming convert.sh exists and works as intended
+            if [[ -f "./convert.sh" ]]; then
+              sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
+              chmod +x ./convert.sh && ./convert.sh
+              mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
+            else
+              echo "Error: convert.sh not found in ./tools/"
+              exit 1
+            fi
             rm -rf ./sing-box*
 
             cd ../
@@ -424,9 +425,14 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-            sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
-            chmod +x ./convert.sh && ./convert.sh
-            mv -f ./*.json ./*.srs ../sing-box-ruleset/
+             if [[ -f "./convert.sh" ]]; then
+              sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
+              chmod +x ./convert.sh && ./convert.sh
+              mv -f ./*.json ./*.srs ../sing-box-ruleset/
+            else
+              echo "Error: convert.sh not found in ./tools/"
+              exit 1
+            fi
             rm -rf ./sing-box* ./rules*
           else
             echo "singbox_core_old_version=${{ env.singbox_core_last3_version }}" >> $GITHUB_ENV
@@ -439,9 +445,14 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
             cd ./tools/
-            sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last3_version }}/' ./convert.sh
-            chmod +x ./convert.sh && ./convert.sh
-            mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
+             if [[ -f "./convert.sh" ]]; then
+              sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last3_version }}/' ./convert.sh
+              chmod +x ./convert.sh && ./convert.sh
+              mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
+            else
+               echo "Error: convert.sh not found in ./tools/"
+               exit 1
+            fi
             rm -rf ./sing-box*
 
             cd ../
@@ -449,13 +460,16 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-            sed -i 's/"version": ${{ env.singbox_rules_last3_version }}/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-            chmod +x ./convert.sh && ./convert.sh
-            mv -f ./*.json ./*.srs ../sing-box-ruleset/
+             if [[ -f "./convert.sh" ]]; then
+              sed -i 's/"version": ${{ env.singbox_rules_last3_version }}/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
+              chmod +x ./convert.sh && ./convert.sh
+              mv -f ./*.json ./*.srs ../sing-box-ruleset/
+            else
+               echo "Error: convert.sh not found in ./tools/"
+               exit 1
+            fi
             rm -rf ./sing-box* ./rules*
           fi
-
-      # --- Release and Commit steps remain unchanged ---
 
       - name: Release and upload `mihomo-geodata` assets
         uses: svenstaro/upload-release-action@v2
