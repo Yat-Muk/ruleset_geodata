@@ -159,47 +159,100 @@ jobs:
       - name: Download `mihomo` rule-set files
         run: |
           mkdir -p ./mihomo-ruleset/
-          domains=(ads adsip trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip) # <-- 在此處加入了 adsip
+          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- adsip 仍在此處
 
+          # --- 處理 Domain 檔案 ---
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/domains/${domain}/"
-            # 下方的 sed 會過濾掉 IP-CIDR，這是符合 mihomo .mrs 需求的
-            curl -sSL "${domains_download_url}/${domain}.list" | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' >> "./tools/domains/${domain}/${domain}.list"
+            curl -sSL "${domains_download_url}/${domain}.list" | \
+              grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+              sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+              > "./tools/domains/${domain}/${domain}.list"
+              
+            if [ ! -s "./tools/domains/${domain}/${domain}.list" ]; then
+               echo "Warning: Filtered list for ${domain} is empty. Removing."
+               rm -f "./tools/domains/${domain}/${domain}.list"
+               rmdir --ignore-fail-on-non-empty "./tools/domains/${domain}/"
+            fi
           done
 
-          mkdir -p ./tmp/ ./tools/domains/fakeip-filter/
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-fakeip-filter-domains.txt
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\s/ /' -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-fakeip-filter-domains.txt
-          sort --ignore-case ./tmp/temp-fakeip-filter-domains.txt >> ./tools/domains/fakeip-filter/fakeip-filter.list
-
+          # --- 特殊處理 fakeip-filter ---
+          mkdir -p ./tools/domains/fakeip-filter/
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | \
+            grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+            sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+            > "./tools/domains/fakeip-filter/fakeip-filter.list"
+          if [ ! -s "./tools/domains/fakeip-filter/fakeip-filter.list" ]; then
+             echo "Warning: Filtered list for fakeip-filter is empty. Removing."
+             rm -f "./tools/domains/fakeip-filter/fakeip-filter.list"
+             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter/"
+          fi
+          
           mkdir -p ./tools/domains/fakeip-filter-lite/
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-fakeip-filter-lite-domains.txt
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-fakeip-filter-lite-domains.txt
-          sort --ignore-case ./tmp/temp-fakeip-filter-lite-domains.txt >> ./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list
+           curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | \
+            grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+            sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+            > "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
+          if [ ! -s "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list" ]; then
+             echo "Warning: Filtered list for fakeip-filter-lite is empty. Removing."
+             rm -f "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
+             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter-lite/"
+          fi
 
-          mkdir -p ./tools/domains/private/
-          curl -sSL "${domains_download_url}/private.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-private-domains.txt
-          curl -sSL "${domains_download_url}/private.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-private-domains.txt
-          sort --ignore-case ./tmp/temp-private-domains.txt >> ./tools/domains/private/private.list
-          rm -f ./tmp/*
+          # --- 特殊處理 private ---
+           mkdir -p ./tools/domains/private/
+           curl -sSL "${domains_download_url}/private.list" | \
+            grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+            sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+            > "./tools/domains/private/private.list"
+          if [ ! -s "./tools/domains/private/private.list" ]; then
+             echo "Warning: Filtered list for private is empty. Removing."
+             rm -f "./tools/domains/private/private.list"
+             rmdir --ignore-fail-on-non-empty "./tools/domains/private/"
+          fi
 
+          # --- 處理 applications ---
           curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
 
+          # --- 處理 IP 檔案 ---
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
-            curl -sSL "${ips_download_url}/${ip}.list" | sed 's/.*,//' >> "./tools/ips/${ip}/${ip}.list"
+            local download_source_url # 聲明局部變數
+            if [[ "$ip" == "adsip" ]]; then
+              # v-- 修正點: adsip 從 domains_download_url 下載 --v
+              download_source_url="${domains_download_url}/${ip}.list"
+            else
+              download_source_url="${ips_download_url}/${ip}.list"
+            fi
+            
+            curl -sSL "${download_source_url}" | \
+              grep -E '^(IP-CIDR,|IP-CIDR6,)' | \
+              sed 's/^IP-CIDR,\|^IP-CIDR6,//' \
+              > "./tools/ips/${ip}/${ip}.list"
+
+             if [ ! -s "./tools/ips/${ip}/${ip}.list" ]; then
+               echo "Warning: Filtered list for ${ip} is empty. Removing."
+               rm -f "./tools/ips/${ip}/${ip}.list"
+               rmdir --ignore-fail-on-non-empty "./tools/ips/${ip}/"
+            fi
           done
+          
+          rm -rf ./tmp/
 
       - name: Download `sing-box` rule_set files
         run: |
-          domains=(ads adsip trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip)
+          # sing-box 的 .srs 格式通常可以處理多種類型，所以 domains 列表可以更全
+          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- adsip 仍在此處
 
+          # --- 處理 Domain 檔案 ---
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/rules/${domain}/"
             curl -sSL "${domains_download_url}/${domain}.list" > "./tools/rules/${domain}/${domain}.list"
           done
+          
+          # --- 特殊處理 fakeip-filter ---
           mkdir -p ./tools/rules/fakeip-filter/
           curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' > ./tmp/temp-fakeip-filter-rules.txt
           cat <<EOF >> ./tmp/temp-fakeip-filter-rules.txt
@@ -218,15 +271,25 @@ jobs:
           DOMAIN-KEYWORD,time
           EOF
           sort --ignore-case ./tmp/temp-fakeip-filter-lite-rules.txt > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
-          rm -rf ./tmp*
-
+          
+          # --- 處理 applications ---
           mkdir -p ./tools/rules/applications/
           curl -sSL "${domains_download_url}/applications.list" > "./tools/rules/applications/applications.list"
 
+          # --- 處理 IP 檔案 ---
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
-            curl -sSL "${ips_download_url}/${ip}.list" > "./tools/rules/${ip}/${ip}.list"
+            local download_source_url # 聲明局部變數
+            if [[ "$ip" == "adsip" ]]; then
+              # v-- 修正點: adsip 從 domains_download_url 下載 --v
+              download_source_url="${domains_download_url}/${ip}.list"
+            else
+              download_source_url="${ips_download_url}/${ip}.list"
+            fi
+            curl -sSL "${download_source_url}" > "./tools/rules/${ip}/${ip}.list"
           done
+          
+          rm -rf ./tmp* # 確保清除 fakeip 的臨時檔案
 
       - name: Generate `mihomo` rule-set (yaml)
         run: |
@@ -234,9 +297,7 @@ jobs:
           
           mkdir -p ./mihomo-ruleset-yaml/
           
-          # 移除 'ads'，因為它將被特殊處理
           domains=(trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          # 'ips' 列表保持不變，因為 'adsip' 將被合併到 'ads.yaml'
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
           
           # --- 函式 1: 生成標準 YAML 規則集 ---
@@ -248,7 +309,7 @@ jobs:
             echo "Generating YAML ruleset for: ${item_name}"
 
             local content
-            content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
+            content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
             
             local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
             count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
@@ -288,24 +349,23 @@ jobs:
             local item_name="ads"
             local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
             
-            # 1. 獲取 domain 和 ip 的內容
             local content_domain content_ip content
-            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|IP-CIDR6|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
+            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
+            # v-- 修正點: content_ip 從 domains_download_url 下載 --v
+            content_ip=$(curl -sSL "${domains_download_url}/adsip.list" | grep -E '^(IP-CIDR,|IP-CIDR6,)' || true) # 只抓 IP 相關行
             
-            # 2. 合併內容 (使用 grep . 來去除可能的空行)
             content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
             
-            # 3. 對合併後的內容進行計數
             local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
             count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
             count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
             count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
-            count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
+            # v-- 修正點: IP 計數應包含 IP-CIDR 和 IP-CIDR6 --v
+            count_ipcidr=$(echo "${content}" | grep -c -E '^IP-CIDR' || true) # 使用 -E 啟用擴展正則
             count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
             count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
             total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
             
-            # 4. 寫入標頭
             {
               echo "# NAME: Ads"
               echo "# AUTHOR: Yat-Muk"
@@ -315,39 +375,36 @@ jobs:
               echo "# DOMAIN-KEYWORD: ${count_keyword}"
               echo "# DOMAIN-SUFFIX: ${count_suffix}"
               echo "# DOMAIN-REGEX: ${count_regex}"
-              echo "# IP-CIDR: ${count_ipcidr}"
+              echo "# IP-CIDR: ${count_ipcidr}" # 標頭保持 IP-CIDR
               echo "# PROCESS-NAME: ${count_process}"
               echo "# TOTAL: ${total}"
               echo "payload:"
             } > "${output_file}"
             
-            # 5. 寫入 payload
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
 
           # --- 腳本執行 ---
-
-          # 循環生成所有 'domains' 規則 (已排除 'ads')
           for item in "${domains[@]}"; do
             generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
           done
           
-          # 處理 'applications'
           generate_yaml_ruleset "applications" "${domains_download_url}/applications.list"
-
-          # 處理 'fakeip-filter'
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
           
-          # 循環生成所有 'ips' 規則
           for item in "${ips[@]}"; do
-            generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
+            # v-- 修正點: adsip.list 現在在 domains_download_url --v
+            if [[ "$item" == "adsip" ]]; then
+               generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
+            else
+               generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
+            fi
           done
           
-          # 最後，呼叫 'ads' 的特殊合併函式
-          generate_merged_ads_ruleset
+          generate_merged_ads_ruleset # 呼叫合併函式
 
       - name: Generate `mihomo` rule-set (mrs) and move .list files
         run: |
@@ -356,30 +413,34 @@ jobs:
 
           cd ./tools/
           chmod +x ./mihomo
-          list=($(ls ./domains/))
-          for ((i = 0; i < ${#list[@]}; i++)); do
-            ./mihomo convert-ruleset domain text "./domains/${list[i]}/${list[i]}.list" ../mihomo-ruleset/${list[i]}.mrs
-            mv -f "./domains/${list[i]}/${list[i]}.list" ../mihomo-ruleset/
+          # 使用 find 來處理可能不存在的檔案/目錄，避免 ls 報錯
+          domain_files=($(find ./domains/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
+          for file_path in "${domain_files[@]}"; do
+             dir_name=$(basename $(dirname "$file_path"))
+             ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             mv -f "$file_path" ../mihomo-ruleset/
           done
 
-          list=($(ls ./ips/))
-          for ((i = 0; i < ${#list[@]}; i++)); do
-            ./mihomo convert-ruleset ipcidr text "./ips/${list[i]}/${list[i]}.list" ../mihomo-ruleset/${list[i]}.mrs
-            mv -f "./ips/${list[i]}/${list[i]}.list" ../mihomo-ruleset/
+          ip_files=($(find ./ips/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
+           for file_path in "${ip_files[@]}"; do
+             dir_name=$(basename $(dirname "$file_path"))
+             ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             mv -f "$file_path" ../mihomo-ruleset/
           done
-          rm -rf ./mihomo* ./domains/ ./ips/
+          
+          # 清理空的 domains 和 ips 目錄
+          find ./domains/ ./ips/ -maxdepth 1 -mindepth 1 -type d -empty -delete 2>/dev/null
+          rm -rf ./mihomo* ./domains/ ./ips/ # 清理執行檔和可能殘留的頂層目錄
 
       - name: Generate `sing-box` rule_set (srs) and move .json files
         run: |
           if [[ "${{ env.singbox_core_last1_version }}" == "${{ env.singbox_core_release_version }}" ]]; then
-            # Setting `sing-box` core&ruleset environment variables
             echo "singbox_core_old_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last1_version }}" >> $GITHUB_ENV
             echo "singbox_ruleset_old_version=${{ env.singbox_rules_last2_version }}" >> $GITHUB_ENV
             echo "singbox_ruleset_new_version=${{ env.singbox_rules_last1_version }}" >> $GITHUB_ENV
             echo "singbox_equal=true" >> $GITHUB_ENV
 
-            # Generate `sing-box` rule_set (compatible)
             curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last2_version }}/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
@@ -389,7 +450,6 @@ jobs:
             mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
             rm -rf ./sing-box*
 
-            # Generate `sing-box` rule_set
             cd ../
             curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last1_version }}/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
             mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
@@ -400,14 +460,12 @@ jobs:
             mv -f ./*.json ./*.srs ../sing-box-ruleset/
             rm -rf ./sing-box* ./rules*
           else
-            # Setting `sing-box` core&ruleset environment variables
             echo "singbox_core_old_version=${{ env.singbox_core_last3_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
             echo "singbox_ruleset_old_version=${{ env.singbox_rules_last3_version }}" >> $GITHUB_ENV
             echo "singbox_ruleset_new_version=${{ env.singbox_rules_last2_version }}" >> $GITHUB_ENV
             echo "singbox_equal=false" >> $GITHUB_ENV
 
-            # Generate `sing-box` rule_set (compatible)
             wget "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last3_version }}/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64.tar.gz" -O - | tar -zxf - -C ./tools/
             mv -f "./tools/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
@@ -417,7 +475,6 @@ jobs:
             mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
             rm -rf ./sing-box*
 
-            # Generate `sing-box` rule_set
             cd ../
             curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last2_version }}/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
