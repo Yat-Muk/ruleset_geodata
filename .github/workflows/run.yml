@@ -42,26 +42,26 @@ jobs:
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
 
       - name: Clone Repository
-        uses: actions/checkout@v4 # 
+        uses: actions/checkout@v5 # 
         with:
           fetch-depth: 1 # 
 
       - name: Checkout DustinWin/domain-list-custom
-        uses: actions/checkout@v4 # 
+        uses: actions/checkout@v5 # 
         with:
           repository: DustinWin/domain-list-custom
           path: custom
           fetch-depth: 1 # 
 
       - name: Checkout v2fly/domain-list-community
-        uses: actions/checkout@v4 # 
+        uses: actions/checkout@v5 # 
         with:
           repository: v2fly/domain-list-community
           path: community
           fetch-depth: 1 # 
 
       - name: Setup Go
-        uses: actions/setup-go@v5 # 
+        uses: actions/setup-go@v6 # 
         with:
           go-version-file: ./custom/go.mod
           cache-dependency-path: ./custom/go.sum
@@ -242,6 +242,8 @@ jobs:
           generate_yaml_ruleset "applications" "${domains_download_url}/applications.list"
           # 
 
+          # 
+          echo "Preparing rules for sing-box..."
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/rules/${domain}/"
             curl -sSL "${domains_download_url}/${domain}.list" > "./tools/rules/${domain}/${domain}.list"
@@ -273,7 +275,38 @@ jobs:
             mkdir -p "./tools/rules/${ip}/"
             curl -sSL "${ips_download_url}/${ip}.list" > "./tools/rules/${ip}/${ip}.list"
           done
-      
+          
+          # 
+          echo "Preparing rules for mihomo..."
+          for domain in "${domains[@]}"; do
+            mkdir -p "./tools/domains/${domain}/"
+            curl -sSL "${domains_download_url}/${domain}.list" | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' >> "./tools/domains/${domain}/${domain}.list"
+          done
+
+          mkdir -p ./tmp/ ./tools/domains/fakeip-filter/
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-fakeip-filter-domains.txt
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\s/ /' -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-fakeip-filter-domains.txt
+          sort --ignore-case ./tmp/temp-fakeip-filter-domains.txt >> ./tools/domains/fakeip-filter/fakeip-filter.list
+
+          mkdir -p ./tools/domains/fakeip-filter-lite/
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-fakeip-filter-lite-domains.txt
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-fakeip-filter-lite-domains.txt
+          sort --ignore-case ./tmp/temp-fakeip-filter-lite-domains.txt >> ./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list
+
+          mkdir -p ./tools/domains/private/
+          curl -sSL "${domains_download_url}/private.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' > ./tmp/temp-private-domains.txt
+          curl -sSL "${domains_download_url}/private.list" | awk '/^DOMAIN-REGEX,/' | sed -e 's/\\./\./g' -e 's/\[\^.\]+/*/g' -e 's/\^\.\*/\^\+/' -e 's/.*\^//; s/\$//' >> ./tmp/temp-private-domains.txt
+          sort --ignore-case ./tmp/temp-private-domains.txt >> ./tools/domains/private/private.list
+          rm -f ./tmp/temp-private-domains.txt
+
+          curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
+
+          for ip in "${ips[@]}"; do
+            mkdir -p "./tools/ips/${ip}/"
+            curl -sSL "${ips_download_url}/${ip}.list" | sed 's/.*,//' >> "./tools/ips/${ip}/${ip}.list"
+          done
+          # 
+
       # 
       - name: Download and cache mihomo core
         id: cache-mihomo
@@ -576,6 +609,7 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 3
           keep_minimum_runs: 1
+
 
 
 
