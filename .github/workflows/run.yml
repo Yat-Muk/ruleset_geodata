@@ -160,10 +160,11 @@ jobs:
         run: |
           mkdir -p ./mihomo-ruleset/
           domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- 在此處加入了 adsip
 
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/domains/${domain}/"
+            # 下方的 sed 會過濾掉 IP-CIDR，這是符合 mihomo .mrs 需求的
             curl -sSL "${domains_download_url}/${domain}.list" | sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,/\+\./' >> "./tools/domains/${domain}/${domain}.list"
           done
 
@@ -193,7 +194,7 @@ jobs:
       - name: Download `sing-box` rule_set files
         run: |
           domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- 在此處加入了 adsip
 
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/rules/${domain}/"
@@ -233,11 +234,12 @@ jobs:
           
           mkdir -p ./mihomo-ruleset-yaml/
           
-          # 聲明您在 run-2.yml 中使用的完整規則列表
-          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          # 移除 'ads'，因為它將被特殊處理
+          domains=(trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          # 'ips' 列表保持不變，因為 'adsip' 將被合併到 'ads.yaml'
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
           
-          # 來自您範例的 'generate_yaml_ruleset' 函式
+          # 'generate_yaml_ruleset' 函式保持不變
           generate_yaml_ruleset() {
             local item_name=$1
             local download_url=$2
@@ -246,10 +248,8 @@ jobs:
             echo "Generating YAML ruleset for: ${item_name}"
 
             local content
-            # 下載並過濾有效的規則行
             content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
             
-            # 計算每種規則的數量
             local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
             count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
             count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
@@ -259,11 +259,9 @@ jobs:
             count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
             total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
             
-            # 規則名稱首字母大寫
             local name
             name=$(echo "${item_name}" | sed -e "s/^\(.\)/\U\1/")
             
-            # 寫入 YAML 標頭
             {
               echo "# NAME: ${name}"
               echo "# AUTHOR: Yat-Muk"
@@ -279,13 +277,12 @@ jobs:
               echo "payload:"
             } > "${output_file}"
             
-            # 寫入 payload 內容
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
 
-          # 循環生成所有 domain 規則
+          # 循環生成所有 'domains' 規則 (已排除 'ads')
           for item in "${domains[@]}"; do
             generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
           done
@@ -297,10 +294,55 @@ jobs:
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
           
-          # 循環生成所有 ip 規則
+          # 循環生成所有 'ips' 規則
           for item in "${ips[@]}"; do
             generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
           done
+          
+          # --- 'ads' 的特殊合併處理 ---
+          echo "Generating MERGED YAML ruleset for: ads"
+          local item_name="ads"
+          local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
+          
+          # 1. 獲取 domain 和 ip 的內容
+          local content_domain content_ip content
+          content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
+          content_ip=$(curl -sSL "${ips_download_url}/adsip.list" | grep -E '^(IP-CIDR)')
+          
+          # 2. 合併內容 (使用 grep . 來去除可能的空行)
+          content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
+          
+          # 3. 對合併後的內容進行計數
+          local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
+          count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
+          count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
+          count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
+          count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
+          count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
+          count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
+          total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+          
+          # 4. 寫入標頭
+          {
+            echo "# NAME: Ads"
+            echo "# AUTHOR: Yat-Muk"
+            echo "# REPO: https://github.com/Yat-Muk/ruleset_geodata"
+            echo "# UPDATED: ${{ env.update_time }}"
+            echo "# DOMAIN: ${count_domain}"
+            echo "# DOMAIN-KEYWORD: ${count_keyword}"
+            echo "# DOMAIN-SUFFIX: ${count_suffix}"
+            echo "# DOMAIN-REGEX: ${count_regex}"
+            echo "# IP-CIDR: ${count_ipcidr}"
+            echo "# PROCESS-NAME: ${count_process}"
+            echo "# TOTAL: ${total}"
+            echo "payload:"
+          } > "${output_file}"
+          
+          # 5. 寫入 payload
+          if [ -n "${content}" ]; then
+            echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
+          fi
+          # --- 'ads' 處理結束 ---
 
       - name: Generate `mihomo` rule-set (mrs) and move .list files
         run: |
@@ -348,7 +390,7 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-            sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
+            sed -i 's/"version": ${{ env.singbox_rules_L2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
             chmod +x ./convert.sh && ./convert.sh
             mv -f ./*.json ./*.srs ../sing-box-ruleset/
             rm -rf ./sing-box* ./rules*
