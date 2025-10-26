@@ -7,10 +7,10 @@
 ① [mihomo 内核](https://github.com/MetaCubeX/mihomo) geodata 文件，包括：geosite.dat、geoip.dat、Country.mmdb 和 geoip.metadb、ASN.mmdb（仅限 mihomo 内核）等  
 ② [sing-box 内核](https://github.com/SagerNet/sing-box) geodata 文件，包括：geosite.db 和 geoip.db 等
 ## 2. 数据源
-① 每天凌晨 3 点（北京时间 UTC+8）自动构建，由上游项目 [DustinWin/domain-list-custom](https://github.com/DustinWin/domain-list-custom) 和 [DustinWin/geoip](https://github.com/DustinWin/geoip) 提供数据源，可查看[域名列表](https://github.com/DustinWin/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/DustinWin/geoip/tree/ips)  
-② `geosite,fakeip-filter,📌 fakeip 过滤` 源采用 [DustinWin/fake_ip_filter.list](https://github.com/DustinWin/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 [sing-box PuerNya 版内核](https://github.com/PuerNya/sing-box/tree/building)时，可使该规则集内的域名走 realip）  
-③ `geosite,fakeip-filter-lite,📌 fakeip 过滤` 源采用 [DustinWin/fake_ip_filter.list](https://github.com/DustinWin/ShellCrash/blob/dev/public/fake_ip_filter.list)，仅保留主要域名（推荐搭配 [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) 且 DNS 配置 mix 混合模式时使用）  
-④ `geosite,private,🔒 私有网络` 源采用 [v2fly/domain-list-community/private](https://github.com/v2fly/domain-list-community/blob/master/data/private) 和 [blackmatrix7/ios_rule_script/Lan](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Lan)（仅域名）组合，并添加主流 [Dashboard 在线面板](https://github.com/DustinWin/proxy-tools/releases/tag/Dashboard)域名（`yacd.haishan.me`、`yacd.metacubex.one`、`metacubex.github.io`、`metacubexd.pages.dev` 和 `board.zash.run.place`）  
+① 每天凌晨 3 点（北京时间 UTC+8）自动构建，由上游项目 [Yat-Muk/domain-list-custom](https://github.com/Yat-Muk/domain-list-custom) 和 [Yat-Muk/geoip](https://github.com/Yat-Muk/geoip) 提供数据源，可查看[域名列表](https://github.com/Yat-Muk/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/Yat-Muk/geoip/tree/ips)  
+② `geosite,fakeip-filter,📌 fakeip 过滤` 源采用 [Yat-Muk/fake_ip_filter.list](https://github.com/Yat-Muk/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 [sing-box PuerNya 版内核](https://github.com/PuerNya/sing-box/tree/building)时，可使该规则集内的域名走 realip）  
+③ `geosite,fakeip-filter-lite,📌 fakeip 过滤` 源采用 [Yat-Muk/fake_ip_filter.list](https://github.com/Yat-Muk/ShellCrash/blob/dev/public/fake_ip_filter.list)，仅保留主要域名（推荐搭配 [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) 且 DNS 配置 mix 混合模式时使用）  
+④ `geosite,private,🔒 私有网络` 源采用 [v2fly/domain-list-community/private](https://github.com/v2fly/domain-list-community/blob/master/data/private) 和 [blackmatrix7/ios_rule_script/Lan](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Lan)（仅域名）组合，并添加主流 [Dashboard 在线面板](https://github.com/Yat-Muk/proxy-tools/releases/tag/Dashboard)域名（`yacd.haishan.me`、`yacd.metacubex.one`、`metacubex.github.io`、`metacubexd.pages.dev` 和 `board.zash.run.place`）  
 ⑤ `geosite,ads,🛑 广告域名` 源采用 [privacy-protection-tools/anti-AD](https://github.com/privacy-protection-tools/anti-AD)  
 ⑥ `geosite,trackerslist,📋 Trackerslist` 源采用 [XIU2/TrackersListCollection](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅域名）和 [ngosang/trackerslist](https://github.com/ngosang/trackerslist/blob/master/trackers_all.txt) 组合  
 ⑦ `geosite,microsoft-cn,🪟 微软服务` 源采用 [v2fly/domain-list-community/microsoft@cn](https://github.com/v2fly/domain-list-community/blob/master/data/microsoft)  
@@ -26,7 +26,7 @@
 ⑰ `geosite,proxy,🧱 代理域名` 源采用 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn)（删除了带有 `@cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn) 中带有 `@!cn` 的域名）、[gfwlist](https://github.com/gfwlist/gfwlist) 和 [blackmatrix7/ios_rule_script/Global](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Global) 组合  
 ⑱ `geosite,cn,🛡️ 直连域名` 源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn) 中带有 `@cn` 的域名）、[blackmatrix7/ios_rule_script/China](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/China) 和 [felixonmars/dnsmasq-china-list/accelerated-domains.china.conf](https://github.com/felixonmars/dnsmasq-china-list/blob/master/accelerated-domains.china.conf) 组合  
 ⑲ `geosite,cn,🛡️ 直连域名`（精简版）源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn) 中带有 `@cn` 的域名）和 [blackmatrix7/ios_rule_script/China](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/China) 组合  
-⑳ `geoip,private,🔒 私有网络` 源采用 [DustinWin/geoip/config.json](https://github.com/DustinWin/geoip/blob/master/config.json) 中的 `input.type:private`  
+⑳ `geoip,private,🔒 私有网络` 源采用 [Yat-Muk/geoip/config.json](https://github.com/Yat-Muk/geoip/blob/master/config.json) 中的 `input.type:private`  
 ㉑ `geoip,cn,🀄️ 直连 IP` 源采用 [GeoLite2-Country-CSV/CN](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)、[17mon/china_ip_list](https://github.com/17mon/china_ip_list)、[gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)、[APNIC/CN](http://ftp.apnic.net/stats/apnic/delegated-apnic-latest) 和 [blackmatrix7/ios_rule_script/ChinaASN](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Surge/ChinaASN) 组合  
 ㉒ `geoip,media,🌍 国外媒体` 源采用 [blackmatrix7/ios_rule_script/GlobalMedia](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/GlobalMedia)（仅 IP）  
 ㉓ `geoip,games,🎮 游戏平台` 源采用 [blackmatrix7/ios_rule_script/Game](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Game)（仅 IP）  
@@ -44,161 +44,161 @@
   <tr>
     <td>geosite-all.dat</td>
     <td><code>fakeip-filter</code>、<del><code>fakeip-filter-lite</code></del>、<code>private</code>、<code>ads</code>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite-all.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite-all.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all.db</td>
     <td><code>fakeip-filter</code>、<del><code>fakeip-filter-lite</code></del>、<code>private</code>、<code>ads</code>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite-all.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite-all.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all-lite.dat</td>
     <td><del><code>fakeip-filter</code></del>、<code>fakeip-filter-lite</code>、<code>private</code>、<del><code>ads</code></del>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-all-lite.db</td>
     <td><del><code>fakeip-filter</code></del>、<code>fakeip-filter-lite</code>、<code>private</code>、<del><code>ads</code></del>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-all-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite.dat</td>
     <td><code>fakeip-filter</code>、<del><code>fakeip-filter-lite</code></del>、<code>private</code>、<code>ads</code>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code></del>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite.db</td>
     <td><code>fakeip-filter</code>、<del><code>fakeip-filter-lite</code></del>、<code>private</code>、<code>ads</code>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code></del>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-lite.dat</td>
     <td><del><code>fakeip-filter</code></del>、<code>fakeip-filter-lite</code>、<code>private</code>、<del><code>ads</code></del>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code></del>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-lite.db</td>
     <td><del><code>fakeip-filter</code></del>、<code>fakeip-filter-lite</code>、<code>private</code>、<del><code>ads</code></del>、<code>trackerslist</code>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code></del>、<code>ai</code>、<code>networktest</code>、<code>tld-proxy</code>、<code>gfw</code>、<code>proxy</code> 和 <code>cn</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite-lite.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite-lite.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-mini.dat</td>
     <td><del><code>fakeip-filter</code>、<code>fakeip-filter-lite</code></del>、<code>private</code>、<del><code>ads</code>、<code>trackerslist</code></del>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code></del>、<code>tld-proxy</code>、<code>gfw</code>、<del><code>proxy</code></del> 和 <code>cn</code>（精简版）</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite-lite.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite-lite.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>geosite-mini.db</td>
     <td><del><code>fakeip-filter</code>、<code>fakeip-filter-lite</code></del>、<code>private</code>、<del><code>ads</code>、<code>trackerslist</code></del>、<code>microsoft-cn</code>、<code>apple-cn</code>、<code>google-cn</code>、<code>games-cn</code>、<del><code>media</code>、<code>games</code>、<code>ai</code>、<code>networktest</code></del>、<code>tld-proxy</code>、<code>gfw</code>、<del><code>proxy</code></del> 和 <code>cn</code>（精简版）</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-mini.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite-mini.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-mini.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-mini.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite-mini.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-mini.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.dat</td>
     <td rowspan="4" align="center"><a href="https://github.com/Loyalsoldier/geoip/tree/release/text">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip-all.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip-all.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-all.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-all.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-all.mmdb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-all.mmdb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-all.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip-all.metadb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip-all.metadb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-all.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-all.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip-all.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geoip-all.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip-all.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip-all.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geoip-all.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip-all.db">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-ASN-all.mmdb</td>
     <td><code>cloudflare</code></del>、<code>cloudfront</code>、<code>facebook</code>、<code>fastly</code>、<code>google</code>、<code>netflix</code>、<code>telegram</code> 和 <code>twitter</code>，具体可<a href="https://github.com/Loyalsoldier/geoip/blob/d1eca9ff06580fe8f015b139248e09177a576c38/config.json#L124">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN-all.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.dat</td>
     <td rowspan="4"><code>private</code>、<code>cn</code>、<code>media</code>、<code>games</code> 和 <code>telegram</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country.mmdb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country.mmdb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.metadb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.metadb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geoip.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geoip.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip.db">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.dat</td>
     <td rowspan="4"><code>private</code>、<code>cn</code>、<del><code>media</code>、<code>games</code></del> 和 <code>telegram</code></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.dat">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip-lite.dat">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip-lite.dat">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.dat">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-lite.mmdb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-lite.mmdb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.metadb</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip-lite.metadb">点此下载</a></td>
   </tr>
   <tr>
     <td>geoip-lite.db</td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip-lite.db">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geoip-lite.db">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geoip-lite.db">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip-lite.db">点此下载</a></td>
   </tr>
   <tr>
     <td>Country-ASN.mmdb</td>
-    <td><code>netflix</code> 和 <code>telegram</code>，具体可<a href="https://github.com/DustinWin/geoip/blob/master/config.json#L73">点此查看</a></td>
-    <td><a href="https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
-    <td><a href="https://ghfast.top/https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
+    <td><code>netflix</code> 和 <code>telegram</code>，具体可<a href="https://github.com/Yat-Muk/geoip/blob/master/config.json#L73">点此查看</a></td>
+    <td><a href="https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
+    <td><a href="https://ghfast.top/https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb">点此下载</a></td>
   </tr>
 </table>
 
@@ -209,14 +209,14 @@
 连接 SSH 后执行如下命令：
 ```shell
 # 适用于 mihomo 内核
-curl -o $CRASHDIR/GeoSite.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite.dat
-curl -o $CRASHDIR/GeoIP.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.dat
-curl -o $CRASHDIR/Country.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country.mmdb
-curl -o $CRASHDIR/geoip.metadb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.metadb
-curl -o $CRASHDIR/ASN.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb
+curl -o $CRASHDIR/GeoSite.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite.dat
+curl -o $CRASHDIR/GeoIP.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.dat
+curl -o $CRASHDIR/Country.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country.mmdb
+curl -o $CRASHDIR/geoip.metadb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.metadb
+curl -o $CRASHDIR/ASN.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb
 # 适用于 sing-box 内核
-curl -o $CRASHDIR/geosite.db -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geosite.db
-curl -o $CRASHDIR/geoip.db -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@sing-box-geodata/geoip.db
+curl -o $CRASHDIR/geosite.db -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geosite.db
+curl -o $CRASHDIR/geoip.db -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@sing-box-geodata/geoip.db
 $CRASHDIR/start.sh restart
 ```
 </details>
@@ -228,11 +228,11 @@ $CRASHDIR/start.sh restart
 taskkill /f /t /im "Clash Verge*"
 taskkill /f /t /im clash-verge*
 taskkill /f /t /im verge-mihomo*
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geosite.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geosite.dat
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.dat -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.dat
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\Country.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country.mmdb
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.metadb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/geoip.metadb
-curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geosite.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geosite.dat
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.dat -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.dat
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\Country.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country.mmdb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\geoip.metadb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/geoip.metadb
+curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@mihomo-geodata/Country-ASN.mmdb
 ```
 </details>
 
@@ -245,10 +245,10 @@ curl -o %APPDATA%\io.github.clash-verge-rev.clash-verge-rev\ASN.mmdb -L https://
 ```yaml
 geodata-mode: true
 geox-url:
-  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat"
-  geoip: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat"
-  mmdb: "hhttps://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb"
-  asn: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb"
+  geosite: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat"
+  geoip: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat"
+  mmdb: "hhttps://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb"
+  asn: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb"
 
 proxy-groups:
   - {name: 🚀 节点选择, type: select, proxies: [🇭🇰 香港节点, 🇹🇼 台湾节点, 🇯🇵 日本节点, 🇸🇬 新加坡节点, 🇺🇸 美国节点]}
@@ -313,39 +313,39 @@ rules:
 ```yaml
 geodata-mode: true
 geox-url:
-  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat"
-  geoip: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat"
-  mmdb: "hhttps://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb"
-  asn: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb"
+  geosite: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geosite-all.dat"
+  geoip: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/geoip.dat"
+  mmdb: "hhttps://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country.mmdb"
+  asn: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb"
 
 proxy-groups:
-  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/proxy.png"}
-  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/networktest.png"}
-  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ai.png"}
-  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/trackerslist.png"}
-  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games-cn.png"}
-  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
-  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/google-cn.png"}
-  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/apple-cn.png"}
-  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/media.png"}
-  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games.png"}
-  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cn.png"}
-  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cnip.png"}
-  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/telegram.png"}
-  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/private.png"}
-  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/match.png"}
-  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ads.png"}
-  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/reject.png"}
-  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/pass.png"}
-  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/direct.png"}
+  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/proxy.png"}
+  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/networktest.png"}
+  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ai.png"}
+  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/trackerslist.png"}
+  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games-cn.png"}
+  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
+  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/google-cn.png"}
+  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/apple-cn.png"}
+  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/media.png"}
+  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games.png"}
+  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cn.png"}
+  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cnip.png"}
+  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/telegram.png"}
+  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/private.png"}
+  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/match.png"}
+  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ads.png"}
+  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/reject.png"}
+  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/pass.png"}
+  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/direct.png"}
 
-  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/hongkong.png"}
-  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/taiwan.png"}
-  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/japan.png"}
-  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/singapore.png"}
-  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/unitedstates.png"}
+  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/hongkong.png"}
+  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/taiwan.png"}
+  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/japan.png"}
+  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/singapore.png"}
+  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/unitedstates.png"}
 
 rules:
   - GEOSITE,private,私有网络
@@ -441,11 +441,11 @@ rules:
     ],
     "geosite": {
       "path": "./geodata/geosite.db",
-      "download_url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db"
+      "download_url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geosite-all.db"
     },
     "geoip": {
       "path": "./geodata/geoip.db",
-      "download_url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-geodata/geoip.db"
+      "download_url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-geodata/geoip.db"
     }
   }
 }
@@ -457,10 +457,10 @@ rules:
 ① [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 规则集文件，格式有 `.list`（`format: text`）和 `.mrs`（`format: mrs`）  
 ② [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 规则集文件，格式有 `.json`（`"format": "source"`）和 `.srs`（`"format": "binary"`）
 ## 2. 数据源
-① 每天凌晨 3 点（北京时间 UTC+8）自动构建，由上游项目 [DustinWin/domain-list-custom](https://github.com/DustinWin/domain-list-custom) 和 [DustinWin/geoip](https://github.com/DustinWin/geoip) 提供数据源，可查看[域名列表](https://github.com/DustinWin/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/DustinWin/geoip/tree/ips)  
-② `rule-set,fakeip-filter,📌 fakeip 过滤` 源采用 [DustinWin/fake_ip_filter.list](https://github.com/DustinWin/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 sing-box PuerNya 版内核时，可使该规则集内的域名走 realip）  
-③ `rule-set,fakeip-filter-lite,📌 fakeip 过滤` 源采用 [DustinWin/fake_ip_filter.list](https://github.com/DustinWin/ShellCrash/blob/dev/public/fake_ip_filter.list)，仅保留主要域名（推荐搭配 [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) 且 DNS 配置 mix 混合模式时使用）  
-④ `rule-set,private,🔒 私有网络` 源采用 [v2fly/domain-list-community/private](https://github.com/v2fly/domain-list-community/blob/master/data/private) 和 [blackmatrix7/ios_rule_script/Lan](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Lan)（仅域名）组合，并添加主流 [Dashboard 在线面板](https://github.com/DustinWin/proxy-tools/releases/tag/Dashboard)域名（`yacd.haishan.me`、`yacd.metacubex.one`、`metacubex.github.io`、`metacubexd.pages.dev`和 `board.zash.run.place`）  
+① 每天凌晨 3 点（北京时间 UTC+8）自动构建，由上游项目 [Yat-Muk/domain-list-custom](https://github.com/Yat-Muk/domain-list-custom) 和 [Yat-Muk/geoip](https://github.com/Yat-Muk/geoip) 提供数据源，可查看[域名列表](https://github.com/Yat-Muk/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/Yat-Muk/geoip/tree/ips)  
+② `rule-set,fakeip-filter,📌 fakeip 过滤` 源采用 [Yat-Muk/fake_ip_filter.list](https://github.com/Yat-Muk/ShellCrash/blob/dev/public/fake_ip_filter.list)（搭载 mihomo 内核或 sing-box PuerNya 版内核时，可使该规则集内的域名走 realip）  
+③ `rule-set,fakeip-filter-lite,📌 fakeip 过滤` 源采用 [Yat-Muk/fake_ip_filter.list](https://github.com/Yat-Muk/ShellCrash/blob/dev/public/fake_ip_filter.list)，仅保留主要域名（推荐搭配 [AdGuard Home](https://github.com/AdguardTeam/AdGuardHome) 且 DNS 配置 mix 混合模式时使用）  
+④ `rule-set,private,🔒 私有网络` 源采用 [v2fly/domain-list-community/private](https://github.com/v2fly/domain-list-community/blob/master/data/private) 和 [blackmatrix7/ios_rule_script/Lan](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Lan)（仅域名）组合，并添加主流 [Dashboard 在线面板](https://github.com/Yat-Muk/proxy-tools/releases/tag/Dashboard)域名（`yacd.haishan.me`、`yacd.metacubex.one`、`metacubex.github.io`、`metacubexd.pages.dev`和 `board.zash.run.place`）  
 ⑤ `rule-set,ads,🛑 广告域名` 源采用 [privacy-protection-tools/anti-AD](https://github.com/privacy-protection-tools/anti-AD)  
 ⑥ `rule-set,trackerslist,📋 Trackerslist` 源采用 [XIU2/TrackersListCollection](https://github.com/XIU2/TrackersListCollection/blob/master/all.txt)（仅域名）和 [ngosang/trackerslist](https://github.com/ngosang/trackerslist/blob/master/trackers_all.txt) 组合  
 ⑦ `rule-set,applications,⬇️ 直连软件` 源采用 [blackmatrix7/ios_rule_script/Download](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Download) 和 [Loyalsoldier/clash-rules/applications.txt](https://github.com/Loyalsoldier/clash-rules/blob/release/applications.txt) 组合  
@@ -486,7 +486,7 @@ rules:
 ㉗ `rule-set,proxy,🧱 代理域名` 源采用 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn)（删除了带有 `@cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn) 中带有 `@!cn` 的域名）、[gfwlist](https://github.com/gfwlist/gfwlist) 和 [blackmatrix7/ios_rule_script/Global](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Global) 组合  
 ㉘ `rule-set,cn,🛡️ 直连域名` 源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn) 中带有 `@cn` 的域名）、[blackmatrix7/ios_rule_script/China](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/China) 和 [felixonmars/dnsmasq-china-list/accelerated-domains.china.conf](https://github.com/felixonmars/dnsmasq-china-list/blob/master/accelerated-domains.china.conf) 组合  
 ㉙ `rule-set,cn,🛡️ 直连域名`（精简版）源采用 [v2fly/domain-list-community/cn](https://github.com/v2fly/domain-list-community/blob/master/data/cn)（删除了带有 `@!cn` 和 `@ads` 的域名，并新增了 [v2fly/domain-list-community/geolocation-!cn](https://github.com/v2fly/domain-list-community/blob/master/data/geolocation-!cn) 中带有 `@cn` 的域名）和 [blackmatrix7/ios_rule_script/China](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/China) 组合  
-㉚ `rule-set,privateip,🔒 私有网络` 源采用 [DustinWin/geoip/config.json](https://github.com/DustinWin/geoip/blob/master/config.json) 中的 `input.type:private`  
+㉚ `rule-set,privateip,🔒 私有网络` 源采用 [Yat-Muk/geoip/config.json](https://github.com/Yat-Muk/geoip/blob/master/config.json) 中的 `input.type:private`  
 ㉛ `rule-set,cnip,🀄️ 直连 IP` 源采用 [GeoLite2-Country-CSV/CN](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data)、[17mon/china_ip_list](https://github.com/17mon/china_ip_list)、[gaoyifan/china-operator-ip](https://github.com/gaoyifan/china-operator-ip)、[APNIC/CN](http://ftp.apnic.net/stats/apnic/delegated-apnic-latest) 和 [blackmatrix7/ios_rule_script/ChinaASN](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Surge/ChinaASN) 组合  
 ㉜ `rule-set,netflixip,🎥 奈飞视频` 源采用 [GeoLite2-ASN-CSV/Netflix](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) 和 [blackmatrix7/ios_rule_script/Netflix](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/Netflix)（Netflix_IP.txt）组合  
 ㉝ `rule-set,mediaip,🌍 国外媒体` 源采用 [blackmatrix7/ios_rule_script/GlobalMedia](https://github.com/blackmatrix7/ios_rule_script/tree/master/rule/Clash/GlobalMedia)（仅 IP）  
@@ -545,7 +545,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/fakeip-filter.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs"
     interval: 86400
   # 任选一
   fakeip-filter:
@@ -553,7 +553,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/fakeip-filter.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter-lite.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter-lite.mrs"
     interval: 86400
 
   private:
@@ -561,7 +561,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/private.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
     interval: 86400
 
   ads:
@@ -569,7 +569,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ads.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
     interval: 86400
 
   trackerslist:
@@ -577,7 +577,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/trackerslist.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
     interval: 86400
 
   applications:
@@ -585,7 +585,7 @@ rule-providers:
     behavior: classical
     format: text
     path: ./rules/applications.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
     interval: 86400
 
   microsoft-cn:
@@ -593,7 +593,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/microsoft-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
     interval: 86400
 
   apple-cn:
@@ -601,7 +601,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/apple-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/apple-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/apple-cn.mrs"
     interval: 86400
 
   google-cn:
@@ -609,7 +609,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/google-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
     interval: 86400
 
   games-cn:
@@ -617,7 +617,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/games-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
     interval: 86400
 
   netflix:
@@ -625,7 +625,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/netflix.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/netflix.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/netflix.mrs"
     interval: 86400
 
   disney:
@@ -633,7 +633,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/disney.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/disney.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/disney.mrs"
     interval: 86400
 
   max:
@@ -641,7 +641,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/max.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/max.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/max.mrs"
     interval: 86400
 
   primevideo:
@@ -649,7 +649,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/primevideo.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/primevideo.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/primevideo.mrs"
     interval: 86400
 
   appletv:
@@ -657,7 +657,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/appletv.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/appletv.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/appletv.mrs"
     interval: 86400
 
   youtube:
@@ -665,7 +665,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/youtube.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
     interval: 86400
 
   tiktok:
@@ -673,7 +673,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/tiktok.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
     interval: 86400
 
   bilibili:
@@ -681,7 +681,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/bilibili.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
     interval: 86400
 
   spotify:
@@ -689,7 +689,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/spotify.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/spotify.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/spotify.mrs"
     interval: 86400
 
   media:
@@ -697,7 +697,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/media.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/media.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/media.mrs"
     interval: 86400
 
   games:
@@ -705,7 +705,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/games.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/games.mrs"
     interval: 86400
 
   ai:
@@ -713,7 +713,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ai.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
     interval: 86400
 
   networktest:
@@ -721,7 +721,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/networktest.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/networktest.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/networktest.mrs"
     interval: 86400
 
   tld-proxy:
@@ -729,7 +729,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/tld-proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
     interval: 86400
 
   # 任选一
@@ -738,7 +738,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/gfw.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/gfw.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/gfw.mrs"
     interval: 86400
   # 任选一
   proxy:
@@ -746,7 +746,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
     interval: 86400
 
   # 任选一
@@ -755,7 +755,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
     interval: 86400
   # 任选一
   cn:
@@ -763,7 +763,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn-lite.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cn-lite.mrs"
     interval: 86400
 
   privateip:
@@ -771,7 +771,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/privateip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
     interval: 86400
 
   cnip:
@@ -779,7 +779,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/cnip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
     interval: 86400
 
   netflixip:
@@ -787,7 +787,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/netflixip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/netflixip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/netflixip.mrs"
     interval: 86400
 
   mediaip:
@@ -795,7 +795,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/mediaip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/mediaip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/mediaip.mrs"
     interval: 86400
 
   gamesip:
@@ -803,7 +803,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/gamesip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/gamesip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/gamesip.mrs"
     interval: 86400
 
   telegramip:
@@ -811,7 +811,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/telegramip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
     interval: 86400
 
 rules:
@@ -856,43 +856,43 @@ rules:
 
 ```yaml
 proxy-groups:
-  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/proxy.png"}
-  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/networktest.png"}
-  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ai.png"}
-  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/trackerslist.png"}
-  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games-cn.png"}
-  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
-  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/google-cn.png"}
-  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/apple-cn.png"}
-  - {name: 奈飞视频, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/netflix.png"}
-  - {name: 迪士尼+, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/disney.png"}
-  - {name: Max, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/max.png"}
-  - {name: Prime Video, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/primevideo.png"}
-  - {name: Apple TV+, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/appletv.png"}
-  - {name: 油管视频, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/youtube.png"}
-  - {name: TikTok, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/tiktok.png"}
-  - {name: 哔哩哔哩, type: select, proxies: [全球直连, 节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/bilibili.png"}
-  - {name: Spotify, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/spotify.png"}
-  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/media.png"}
-  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games.png"}
-  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cn.png"}
-  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cnip.png"}
-  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/telegram.png"}
-  - {name: 直连软件, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/applications.png"}
-  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/private.png"}
-  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/match.png"}
-  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ads.png"}
-  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/reject.png"}
-  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/pass.png"}
-  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/direct.png"}
+  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/proxy.png"}
+  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/networktest.png"}
+  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ai.png"}
+  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/trackerslist.png"}
+  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games-cn.png"}
+  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
+  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/google-cn.png"}
+  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/apple-cn.png"}
+  - {name: 奈飞视频, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/netflix.png"}
+  - {name: 迪士尼+, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/disney.png"}
+  - {name: Max, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/max.png"}
+  - {name: Prime Video, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/primevideo.png"}
+  - {name: Apple TV+, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/appletv.png"}
+  - {name: 油管视频, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/youtube.png"}
+  - {name: TikTok, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/tiktok.png"}
+  - {name: 哔哩哔哩, type: select, proxies: [全球直连, 节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/bilibili.png"}
+  - {name: Spotify, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/spotify.png"}
+  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/media.png"}
+  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games.png"}
+  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cn.png"}
+  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cnip.png"}
+  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/telegram.png"}
+  - {name: 直连软件, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/applications.png"}
+  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/private.png"}
+  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/match.png"}
+  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ads.png"}
+  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/reject.png"}
+  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/pass.png"}
+  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/direct.png"}
 
-  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/hongkong.png"}
-  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/taiwan.png"}
-  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/japan.png"}
-  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/singapore.png"}
-  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/unitedstates.png"}
+  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/hongkong.png"}
+  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/taiwan.png"}
+  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/japan.png"}
+  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/singapore.png"}
+  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/unitedstates.png"}
 
 rule-providers:
   # 任选一
@@ -901,7 +901,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/fakeip-filter.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter.mrs"
     interval: 86400
   # 任选一
   fakeip-filter:
@@ -909,7 +909,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/fakeip-filter.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter-lite.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/fakeip-filter-lite.mrs"
     interval: 86400
 
   private:
@@ -917,7 +917,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/private.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
     interval: 86400
 
   ads:
@@ -925,7 +925,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ads.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
     interval: 86400
 
   trackerslist:
@@ -933,7 +933,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/trackerslist.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
     interval: 86400
 
   applications:
@@ -941,7 +941,7 @@ rule-providers:
     behavior: classical
     format: text
     path: ./rules/applications.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
     interval: 86400
 
   microsoft-cn:
@@ -949,7 +949,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/microsoft-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
     interval: 86400
 
   apple-cn:
@@ -957,7 +957,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/apple-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/apple-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/apple-cn.mrs"
     interval: 86400
 
   google-cn:
@@ -965,7 +965,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/google-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
     interval: 86400
 
   games-cn:
@@ -973,7 +973,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/games-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
     interval: 86400
 
   netflix:
@@ -981,7 +981,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/netflix.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/netflix.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/netflix.mrs"
     interval: 86400
 
   disney:
@@ -989,7 +989,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/disney.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/disney.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/disney.mrs"
     interval: 86400
 
   max:
@@ -997,7 +997,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/max.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/max.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/max.mrs"
     interval: 86400
 
   primevideo:
@@ -1005,7 +1005,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/primevideo.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/primevideo.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/primevideo.mrs"
     interval: 86400
 
   appletv:
@@ -1013,7 +1013,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/appletv.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/appletv.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/appletv.mrs"
     interval: 86400
 
   youtube:
@@ -1021,7 +1021,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/youtube.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
     interval: 86400
 
   tiktok:
@@ -1029,7 +1029,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/tiktok.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
     interval: 86400
 
   bilibili:
@@ -1037,7 +1037,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/bilibili.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
     interval: 86400
 
   spotify:
@@ -1045,7 +1045,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/spotify.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/spotify.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/spotify.mrs"
     interval: 86400
 
   media:
@@ -1053,7 +1053,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/media.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/media.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/media.mrs"
     interval: 86400
 
   games:
@@ -1061,7 +1061,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/games.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/games.mrs"
     interval: 86400
 
   ai:
@@ -1069,7 +1069,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/ai.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
     interval: 86400
 
   networktest:
@@ -1077,7 +1077,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/networktest.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/networktest.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/networktest.mrs"
     interval: 86400
 
   tld-proxy:
@@ -1085,7 +1085,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/tld-proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
     interval: 86400
 
   # 任选一
@@ -1094,7 +1094,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/gfw.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/gfw.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/gfw.mrs"
     interval: 86400
   # 任选一
   proxy:
@@ -1102,7 +1102,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
     interval: 86400
 
   # 任选一
@@ -1111,7 +1111,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
     interval: 86400
   # 任选一
   cn:
@@ -1119,7 +1119,7 @@ rule-providers:
     behavior: domain
     format: mrs
     path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn-lite.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cn-lite.mrs"
     interval: 86400
 
   privateip:
@@ -1127,7 +1127,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/privateip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
     interval: 86400
 
   cnip:
@@ -1135,7 +1135,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/cnip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
     interval: 86400
 
   netflixip:
@@ -1143,7 +1143,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/netflixip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/netflixip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/netflixip.mrs"
     interval: 86400
 
   mediaip:
@@ -1151,7 +1151,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/mediaip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/mediaip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/mediaip.mrs"
     interval: 86400
 
   gamesip:
@@ -1159,7 +1159,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/gamesip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/gamesip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/gamesip.mrs"
     interval: 86400
 
   telegramip:
@@ -1167,7 +1167,7 @@ rule-providers:
     behavior: ipcidr
     format: mrs
     path: ./rules/telegramip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
+    url: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
     interval: 86400
 
 rules:
@@ -1210,7 +1210,7 @@ rules:
 
 ## 4. sing-box 内核文件使用
 注：
-- 1. [sing-box-ruleset](https://github.com/DustinWin/ruleset_geodata/releases/tag/sing-box-ruleset) 规则集文件版本始终与 [sing-box 内核 Release 最新版](https://github.com/SagerNet/sing-box/releases/latest)保持对应；[sing-box-ruleset-compatible](https://github.com/DustinWin/ruleset_geodata/releases/tag/sing-box-ruleset-compatible) 规则集文件版本始终与当前 [sing-box 内核 Release 最新版](https://github.com/SagerNet/sing-box/releases/latest)的上一个 Release 版本对应。详见：[sing-box 源文件格式](https://sing-box.sagernet.org/zh/configuration/rule-set/source-format/)
+- 1. [sing-box-ruleset](https://github.com/Yat-Muk/ruleset_geodata/releases/tag/sing-box-ruleset) 规则集文件版本始终与 [sing-box 内核 Release 最新版](https://github.com/SagerNet/sing-box/releases/latest)保持对应；[sing-box-ruleset-compatible](https://github.com/Yat-Muk/ruleset_geodata/releases/tag/sing-box-ruleset-compatible) 规则集文件版本始终与当前 [sing-box 内核 Release 最新版](https://github.com/SagerNet/sing-box/releases/latest)的上一个 Release 版本对应。详见：[sing-box 源文件格式](https://sing-box.sagernet.org/zh/configuration/rule-set/source-format/)
 - 2. 须手动新建“*ruleset*”文件夹，否则规则集文件不会保存在本地。如导入 [ShellCrash](https://github.com/juewuy/ShellCrash)，可先连接 SSH 后执行命令 `mkdir -p $CRASHDIR/ruleset/`
 - 3. 以下只是节选，请酌情套用
 
@@ -1303,7 +1303,7 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/fakeip-filter.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter.srs"
       },
       // 任选一
       {
@@ -1311,161 +1311,161 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/fakeip-filter.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter-lite.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/fakeip-filter-lite.srs"
       },
       {
         "tag": "private",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/private.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/private.srs"
       },
       {
         "tag": "ads",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/ads.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ads.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/ads.srs"
       },
       {
         "tag": "trackerslist",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/trackerslist.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/trackerslist.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/trackerslist.srs"
       },
       {
         "tag": "applications",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/applications.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/applications.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/applications.srs"
       },
       {
         "tag": "microsoft-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/microsoft-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/microsoft-cn.srs"
       },
       {
         "tag": "apple-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/apple-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/apple-cn.srs"
       },
       {
         "tag": "google-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/google-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/google-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/google-cn.srs"
       },
       {
         "tag": "games-cn",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/games-cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/games-cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/games-cn.srs"
       },
       {
         "tag": "netflix",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/netflix.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflix.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/netflix.srs"
       },
       {
         "tag": "disney",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/disney.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/disney.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/disney.srs"
       },
       {
         "tag": "max",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/max.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/max.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/max.srs"
       },
       {
         "tag": "primevideo",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/primevideo.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/primevideo.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/primevideo.srs"
       },
       {
         "tag": "appletv",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/appletv.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/appletv.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/appletv.srs"
       },
       {
         "tag": "youtube",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/youtube.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/youtube.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/youtube.srs"
       },
       {
         "tag": "tiktok",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/tiktok.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/tiktok.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/tiktok.srs"
       },
       {
         "tag": "bilibili",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/bilibili.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/bilibili.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/bilibili.srs"
       },
       {
         "tag": "spotify",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/spotify.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/spotify.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/spotify.srs"
       },
       {
         "tag": "media",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/media.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/media.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/media.srs"
       },
       {
         "tag": "games",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/games.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/games.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/games.srs"
       },
       {
         "tag": "ai",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/ai.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/ai.srs"
       },
       {
         "tag": "networktest",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/networktest.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/networktest.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/networktest.srs"
       },
       {
         "tag": "tld-proxy",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/tld-proxy.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/tld-proxy.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/tld-proxy.srs"
       },
       // 任选一
       {
@@ -1473,7 +1473,7 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/gfw.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/gfw.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/gfw.srs"
       },
       // 任选一
       {
@@ -1481,7 +1481,7 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/proxy.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/proxy.srs"
       },
       // 任选一
       {
@@ -1489,7 +1489,7 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/cn.srs"
       },
       // 任选一
       {
@@ -1497,49 +1497,49 @@ rules:
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/cn.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cn-lite.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/cn-lite.srs"
       },
       {
         "tag": "privateip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/privateip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/privateip.srs"
       },
       {
         "tag": "cnip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/cnip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/cnip.srs"
       },
       {
         "tag": "netflixip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/netflixip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/netflixip.srs"
       },
       {
         "tag": "mediaip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/mediaip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/mediaip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/mediaip.srs"
       },
       {
         "tag": "gamesip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/gamesip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/gamesip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/gamesip.srs"
       },
       {
         "tag": "telegramip",
         "type": "remote",
         "format": "binary",
         "path": "./ruleset/telegramip.srs",
-        "url": "https://github.com/DustinWin/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
+        "url": "https://github.com/Yat-Muk/ruleset_geodata/releases/download/sing-box-ruleset/telegramip.srs"
       }
     ]
   }
@@ -1560,75 +1560,66 @@ rules:
     <td><b>GitHub Proxy 源</b></td>
   </tr>
   <tr>
-    <td>DustinWin_Full.ini</td>
+    <td>Yat-Muk_Full.ini</td>
     <td>全分组规则，包含所有规则集，如国外媒体和游戏平台分流等</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Full.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Full.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Full.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Full.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Full.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Full.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Full_NoAds.ini</td>
+    <td>Yat-Muk_Full_NoAds.ini</td>
     <td>无广告全分组规则，包含所有规则集但去掉了广告规则集</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Full_NoAds.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Full_NoAds.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Full_NoAds.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Full_NoAds.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Full_NoAds.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Full_NoAds.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Lite.ini</td>
+    <td>Yat-Muk_Lite.ini</td>
     <td>精简规则，不包含国外媒体和游戏平台分流</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Lite.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Lite.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Lite.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Lite.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Lite.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Lite.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Lite_NoAds.ini</td>
+    <td>Yat-Muk_Lite_NoAds.ini</td>
     <td>无广告精简规则，不包含国外媒体、游戏平台分流和广告规则集</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Lite_NoAds.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Lite_NoAds.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Lite_NoAds.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Lite_NoAds.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Lite_NoAds.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Lite_NoAds.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Blacklist.ini</td>
+    <td>Yat-Muk_Blacklist.ini</td>
     <td>黑名单模式规则，GFW 模式，包含 <code>gfw</code> 分流</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Blacklist.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Blacklist_NoAds.ini</td>
+    <td>Yat-Muk_Blacklist_NoAds.ini</td>
     <td>无广告黑名单模式规则，GFW 模式但去掉了广告规则集</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_NoAds.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist_NoAds.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Blacklist_NoAds.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist_NoAds.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Blacklist_BestCF.ini</td>
-    <td>Cloudflare 优选专用黑名单模式规则，GFW 模式但去掉了广告规则集且仅适用于 <a href="https://github.com/DustinWin/BestCF">Cloudflare 优选</a>项目</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Blacklist_BestCF.ini">点此查看</a></td>
+    <td>Yat-Muk_Blacklist_BestCF.ini</td>
+    <td>Cloudflare 优选专用黑名单模式规则，GFW 模式但去掉了广告规则集且仅适用于 <a href="https://github.com/Yat-Muk/BestCF">Cloudflare 优选</a>项目</td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist_BestCF.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Blacklist_BestCF.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Blacklist_BestCF.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Light.ini</td>
+    <td>Yat-Muk_Light.ini</td>
     <td>轻量规则，仅包含国内外域名或 IP 分流</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Light.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Light.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Light.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Light.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Light.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Light.ini">点此查看</a></td>
   </tr>
   <tr>
-    <td>DustinWin_Nano.ini</td>
+    <td>Yat-Muk_Nano.ini</td>
     <td>极简规则，仅包含国内 IP 分流</td>
-    <td><a href="https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Nano.ini">点此查看</a></td>
-    <td><a href="https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@master/rule_templates/DustinWin_Nano.ini">点此查看</a></td>
-    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/DustinWin/ruleset_geodata/master/rule_templates/DustinWin_Nano.ini">点此查看</a></td>
+    <td><a href="https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Nano.ini">点此查看</a></td>
+    <td><a href="https://cdn.jsdelivr.net/gh/Yat-Muk/ruleset_geodata@master/rule_templates/Yat-Muk_Nano.ini">点此查看</a></td>
+    <td><a href="https://ghfast.top/https://raw.githubusercontent.com/Yat-Muk/ruleset_geodata/master/rule_templates/Yat-Muk_Nano.ini">点此查看</a></td>
   </tr>
 </table>
-
-# 给作者加鸡腿
-<img src="https://github.com/user-attachments/assets/3ea98afa-8a8e-4fe2-9158-6defe58fa2a8" alt="支付宝" width="30%" />
-
-<img src="https://github.com/user-attachments/assets/74fb35b5-30fc-45d5-ad3a-5a003996a244" alt="微信" width="30%" />
-
-# 机场推荐
-[Bitz Net](https://new.bnaffloop.com/#/register?code=HT0ALWZq)（仅次于一线机场，推荐打折时购买）  
-88 折优惠码：`ZQ2025`（有效期至 2025 年 10 月 8 日 23:59）
