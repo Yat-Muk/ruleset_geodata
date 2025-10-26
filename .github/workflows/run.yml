@@ -159,8 +159,8 @@ jobs:
       - name: Download `mihomo` rule-set files
         run: |
           mkdir -p ./mihomo-ruleset/
-          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- 在此處加入了 adsip
+          domains=(ads adsip trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip) # <-- 在此處加入了 adsip
 
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/domains/${domain}/"
@@ -193,8 +193,8 @@ jobs:
 
       - name: Download `sing-box` rule_set files
         run: |
-          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- 在此處加入了 adsip
+          domains=(ads adsip trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip)
 
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/rules/${domain}/"
@@ -290,8 +290,7 @@ jobs:
             
             # 1. 獲取 domain 和 ip 的內容
             local content_domain content_ip content
-            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
-            content_ip=$(curl -sSL "${ips_download_url}/adsip.list" | grep -E '^(IP-CIDR)')
+            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|IP-CIDR6|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
             
             # 2. 合併內容 (使用 grep . 來去除可能的空行)
             content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
