@@ -77,20 +77,20 @@ jobs:
           # Generate `mihomo` geosite-all.dat
           cd ./community/
           for arch1 in "${archs1[@]}"; do
-            curl -sSL "${domains_download_url}/${arch1}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch1}"
+            curl -sSL "${domains_download_url}/${arch1}.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-REGEX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch1}"
           done
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
           keyword:stun
           keyword:time
           EOF
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | grep -E '^DOMAIN-REGEX,' | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
           go run ./ --datapath=./mydata/ --outputname geosite-all.dat
 
           # Generate `mihomo` geosite-all-lite.dat
           rm -f ./mydata/ads ./mydata/fakeip-filter
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
           keyword:ntp
           keyword:stun
@@ -101,20 +101,20 @@ jobs:
           # Generate `mihomo` geosite.dat
           rm -f ./mydata/*
           for arch2 in "${archs2[@]}"; do
-            curl -sSL "${domains_download_url}/${arch2}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch2}"
+            curl -sSL "${domains_download_url}/${arch2}.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-REGEX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch2}"
           done
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
           keyword:stun
           keyword:time
           EOF
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+          curl -sSL "${domains_download_url}/fakeip-filter.list" | grep -E '^DOMAIN-REGEX,' | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
           go run ./ --datapath=./mydata/ --outputname geosite.dat
 
           # Generate `mihomo` geosite-lite.dat
           rm -f ./mydata/ads ./mydata/fakeip-filter
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
           keyword:ntp
           keyword:time
@@ -125,7 +125,7 @@ jobs:
           # Generate `mihomo` geosite-mini.dat
           rm -f ./mydata/*
           for arch3 in "${archs3[@]}"; do
-            curl -sSL "${domains_download_url}/${arch3}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch3}"
+            curl -sSL "${domains_download_url}/${arch3}.list" | grep -E '^(DOMAIN|DOMAIN-SUFFIX|DOMAIN-KEYWORD|DOMAIN-REGEX),' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch3}"
           done
           mv -f ./mydata/cn-lite ./mydata/cn
           go run ./ --datapath=./mydata/ --outputname geosite-mini.dat
@@ -576,4 +576,6 @@ jobs:
           repository: ${{ github.repository }}
           retain_days: 3
           keep_minimum_runs: 1
+
+
 
