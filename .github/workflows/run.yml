@@ -57,7 +57,6 @@ jobs:
           archs2=(private ads trackerslist microsoft-cn apple-cn google-cn games-cn ai networktest tld-proxy gfw proxy cn)
           archs3=(private microsoft-cn apple-cn google-cn games-cn tld-proxy gfw cn-lite)
 
-          # Generate `mihomo` geosite-all.dat
           cd ./community/
           for arch1 in "${archs1[@]}"; do
             curl -sSL "${domains_download_url}/${arch1}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch1}"
@@ -71,7 +70,6 @@ jobs:
           curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
           go run ./ --datapath=./mydata/ --outputname geosite-all.dat
 
-          # Generate `mihomo` geosite-all-lite.dat
           rm -f ./mydata/ads ./mydata/fakeip-filter
           curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
@@ -81,7 +79,6 @@ jobs:
           EOF
           go run ./ --datapath=./mydata/ --outputname geosite-all-lite.dat
 
-          # Generate `mihomo` geosite.dat
           rm -f ./mydata/*
           for arch2 in "${archs2[@]}"; do
             curl -sSL "${domains_download_url}/${arch2}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch2}"
@@ -95,7 +92,6 @@ jobs:
           curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
           go run ./ --datapath=./mydata/ --outputname geosite.dat
 
-          # Generate `mihomo` geosite-lite.dat
           rm -f ./mydata/ads ./mydata/fakeip-filter
           curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
@@ -105,7 +101,6 @@ jobs:
           EOF
           go run ./ --datapath=./mydata/ --outputname geosite-lite.dat
 
-          # Generate `mihomo` geosite-mini.dat
           rm -f ./mydata/*
           for arch3 in "${archs3[@]}"; do
             curl -sSL "${domains_download_url}/${arch3}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch3}"
@@ -124,21 +119,16 @@ jobs:
       - name: Get geoip relative files
         run: |
           mkdir -p ./mihomo-geodata/ ./sing-box-geodata/
-          # Download mihomo geoip files (.mmdb)
           mihomo_mmdb=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '.mmdb' | awk -F '"' '{print $4}'))
           count_mihomo_mmdb=${#mihomo_mmdb[@]}
           for ((i = 0; i < count_mihomo_mmdb; i++)); do
             wget -P ./mihomo-geodata/ "${mihomo_mmdb[i]}"
           done
-
-          # Download `mihomo` other geoip files (except .mmdb)
           mihomo_others=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/mihomo-geodata/' | grep -v '.mmdb' | awk -F '"' '{print $4}'))
           count_mihomo_others=${#mihomo_others[@]}
           for ((i = 0; i < count_mihomo_others; i++)); do
             wget -P ./community/ "${mihomo_others[i]}"
           done
-
-          # Download `sing-box` all geoip files
           singbox_all=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/sing-box-geodata/' | awk -F '"' '{print $4}'))
           count_singbox_all=${#singbox_all[@]}
           for ((i = 0; i < count_singbox_all; i++)); do
@@ -160,16 +150,14 @@ jobs:
         run: |
           mkdir -p ./mihomo-ruleset/
           domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- adsip 仍在此處
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
 
-          # --- 處理 Domain 檔案 ---
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/domains/${domain}/"
             curl -sSL "${domains_download_url}/${domain}.list" | \
               grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
               sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
               > "./tools/domains/${domain}/${domain}.list"
-              
             if [ ! -s "./tools/domains/${domain}/${domain}.list" ]; then
                echo "Warning: Filtered list for ${domain} is empty. Removing."
                rm -f "./tools/domains/${domain}/${domain}.list"
@@ -177,7 +165,6 @@ jobs:
             fi
           done
 
-          # --- 特殊處理 fakeip-filter ---
           mkdir -p ./tools/domains/fakeip-filter/
           curl -sSL "${domains_download_url}/fakeip-filter.list" | \
             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
@@ -200,7 +187,6 @@ jobs:
              rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter-lite/"
           fi
 
-          # --- 特殊處理 private ---
            mkdir -p ./tools/domains/private/
            curl -sSL "${domains_download_url}/private.list" | \
             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
@@ -212,15 +198,13 @@ jobs:
              rmdir --ignore-fail-on-non-empty "./tools/domains/private/"
           fi
 
-          # --- 處理 applications ---
           curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
 
-          # --- 處理 IP 檔案 ---
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
-            local download_source_url # 聲明局部變數
+            # v-- 修正點: 移除 'local' --v
+            download_source_url="" 
             if [[ "$ip" == "adsip" ]]; then
-              # v-- 修正點: adsip 從 domains_download_url 下載 --v
               download_source_url="${domains_download_url}/${ip}.list"
             else
               download_source_url="${ips_download_url}/${ip}.list"
@@ -242,17 +226,14 @@ jobs:
 
       - name: Download `sing-box` rule_set files
         run: |
-          # sing-box 的 .srs 格式通常可以處理多種類型，所以 domains 列表可以更全
           domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
-          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip) # <-- adsip 仍在此處
+          ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
 
-          # --- 處理 Domain 檔案 ---
           for domain in "${domains[@]}"; do
             mkdir -p "./tools/rules/${domain}/"
             curl -sSL "${domains_download_url}/${domain}.list" > "./tools/rules/${domain}/${domain}.list"
           done
           
-          # --- 特殊處理 fakeip-filter ---
           mkdir -p ./tools/rules/fakeip-filter/
           curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' > ./tmp/temp-fakeip-filter-rules.txt
           cat <<EOF >> ./tmp/temp-fakeip-filter-rules.txt
@@ -272,16 +253,14 @@ jobs:
           EOF
           sort --ignore-case ./tmp/temp-fakeip-filter-lite-rules.txt > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
           
-          # --- 處理 applications ---
           mkdir -p ./tools/rules/applications/
           curl -sSL "${domains_download_url}/applications.list" > "./tools/rules/applications/applications.list"
 
-          # --- 處理 IP 檔案 ---
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
-            local download_source_url # 聲明局部變數
+            # v-- 修正點: 移除 'local' --v
+            download_source_url="" 
             if [[ "$ip" == "adsip" ]]; then
-              # v-- 修正點: adsip 從 domains_download_url 下載 --v
               download_source_url="${domains_download_url}/${ip}.list"
             else
               download_source_url="${ips_download_url}/${ip}.list"
@@ -289,7 +268,7 @@ jobs:
             curl -sSL "${download_source_url}" > "./tools/rules/${ip}/${ip}.list"
           done
           
-          rm -rf ./tmp* # 確保清除 fakeip 的臨時檔案
+          rm -rf ./tmp*
 
       - name: Generate `mihomo` rule-set (yaml)
         run: |
@@ -300,17 +279,13 @@ jobs:
           domains=(trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
           
-          # --- 函式 1: 生成標準 YAML 規則集 ---
           generate_yaml_ruleset() {
             local item_name=$1
             local download_url=$2
             local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
-            
             echo "Generating YAML ruleset for: ${item_name}"
-
             local content
             content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
-            
             local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
             count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
             count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
@@ -319,10 +294,8 @@ jobs:
             count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
             count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
             total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
-            
             local name
             name=$(echo "${item_name}" | sed -e "s/^\(.\)/\U\1/")
-            
             {
               echo "# NAME: ${name}"
               echo "# AUTHOR: Yat-Muk"
@@ -337,35 +310,27 @@ jobs:
               echo "# TOTAL: ${total}"
               echo "payload:"
             } > "${output_file}"
-            
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
           
-          # --- 函式 2: 生成 'ads' 的合併 YAML 規則集 ---
           generate_merged_ads_ruleset() {
             echo "Generating MERGED YAML ruleset for: ads"
             local item_name="ads"
             local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
-            
             local content_domain content_ip content
             content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
-            # v-- 修正點: content_ip 從 domains_download_url 下載 --v
-            content_ip=$(curl -sSL "${domains_download_url}/adsip.list" | grep -E '^(IP-CIDR,|IP-CIDR6,)' || true) # 只抓 IP 相關行
-            
+            content_ip=$(curl -sSL "${domains_download_url}/adsip.list" | grep -E '^(IP-CIDR,|IP-CIDR6,)' || true)
             content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
-            
             local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
             count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
             count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
             count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
-            # v-- 修正點: IP 計數應包含 IP-CIDR 和 IP-CIDR6 --v
-            count_ipcidr=$(echo "${content}" | grep -c -E '^IP-CIDR' || true) # 使用 -E 啟用擴展正則
+            count_ipcidr=$(echo "${content}" | grep -c -E '^IP-CIDR' || true)
             count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
             count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
             total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
-            
             {
               echo "# NAME: Ads"
               echo "# AUTHOR: Yat-Muk"
@@ -375,65 +340,69 @@ jobs:
               echo "# DOMAIN-KEYWORD: ${count_keyword}"
               echo "# DOMAIN-SUFFIX: ${count_suffix}"
               echo "# DOMAIN-REGEX: ${count_regex}"
-              echo "# IP-CIDR: ${count_ipcidr}" # 標頭保持 IP-CIDR
+              echo "# IP-CIDR: ${count_ipcidr}"
               echo "# PROCESS-NAME: ${count_process}"
               echo "# TOTAL: ${total}"
               echo "payload:"
             } > "${output_file}"
-            
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
 
-          # --- 腳本執行 ---
           for item in "${domains[@]}"; do
             generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
           done
-          
           generate_yaml_ruleset "applications" "${domains_download_url}/applications.list"
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
-          
           for item in "${ips[@]}"; do
-            # v-- 修正點: adsip.list 現在在 domains_download_url --v
-            if [[ "$item" == "adsip" ]]; then
-               generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
-            else
+             # adsip.list is now handled by generate_merged_ads_ruleset
+             if [[ "$item" != "adsip" ]]; then 
                generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
-            fi
+             fi
           done
-          
-          generate_merged_ads_ruleset # 呼叫合併函式
+          generate_merged_ads_ruleset
 
       - name: Generate `mihomo` rule-set (mrs) and move .list files
         run: |
           curl -L https://github.com/DustinWin/proxy-tools/releases/download/mihomo/mihomo-meta-linux-amd64v3.tar.gz | tar -zx -C ./tools/
           mv -f ./tools/CrashCore ./tools/mihomo
-
           cd ./tools/
           chmod +x ./mihomo
-          # 使用 find 來處理可能不存在的檔案/目錄，避免 ls 報錯
+          
           domain_files=($(find ./domains/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
           for file_path in "${domain_files[@]}"; do
              dir_name=$(basename $(dirname "$file_path"))
-             ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             # 跳過空的 list 文件以防 panic
+             if [ -s "$file_path" ]; then
+                echo "Converting domain ruleset: ${dir_name}"
+                ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             else
+                echo "Skipping empty domain list file: $file_path"
+             fi
+             # 即使轉換失敗或跳過，也移動 list 文件
              mv -f "$file_path" ../mihomo-ruleset/
           done
 
           ip_files=($(find ./ips/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
            for file_path in "${ip_files[@]}"; do
              dir_name=$(basename $(dirname "$file_path"))
-             ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             if [ -s "$file_path" ]; then
+                echo "Converting ipcidr ruleset: ${dir_name}"
+                ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+             else
+               echo "Skipping empty ip list file: $file_path"
+             fi
              mv -f "$file_path" ../mihomo-ruleset/
           done
           
-          # 清理空的 domains 和 ips 目錄
           find ./domains/ ./ips/ -maxdepth 1 -mindepth 1 -type d -empty -delete 2>/dev/null
-          rm -rf ./mihomo* ./domains/ ./ips/ # 清理執行檔和可能殘留的頂層目錄
+          rm -rf ./mihomo* ./domains/ ./ips/
 
       - name: Generate `sing-box` rule_set (srs) and move .json files
         run: |
+          # The rest of the script remains the same as your last correct version
           if [[ "${{ env.singbox_core_last1_version }}" == "${{ env.singbox_core_release_version }}" ]]; then
             echo "singbox_core_old_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last1_version }}" >> $GITHUB_ENV
@@ -485,6 +454,8 @@ jobs:
             mv -f ./*.json ./*.srs ../sing-box-ruleset/
             rm -rf ./sing-box* ./rules*
           fi
+
+      # --- Release and Commit steps remain unchanged ---
 
       - name: Release and upload `mihomo-geodata` assets
         uses: svenstaro/upload-release-action@v2
@@ -651,29 +622,17 @@ jobs:
       - name: Purge jsDelivr CDN
         run: |
           cd ./mihomo-geodata/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-geodata/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-geodata/${file}"; done
           cd ../sing-box-geodata/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-geodata/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-geodata/${file}"; done
           cd ../mihomo-ruleset/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset/${file}"; done
           cd ../mihomo-ruleset-yaml/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset-yaml/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset-yaml/${file}"; done
           cd ../sing-box-ruleset-compatible/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"; done
           cd ../sing-box-ruleset/ || exit 1
-          for file in $(ls); do
-            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset/${file}"
-          done
+          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset/${file}"; done
 
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
