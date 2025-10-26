@@ -319,33 +319,33 @@ geox-url:
   asn: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/mihomo-geodata/Country-ASN.mmdb"
 
 proxy-groups:
-  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/proxy.png"}
-  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/networktest.png"}
-  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ai.png"}
-  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/trackerslist.png"}
-  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games-cn.png"}
-  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
-  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/google-cn.png"}
-  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/apple-cn.png"}
-  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/media.png"}
-  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/games.png"}
-  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cn.png"}
-  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/cnip.png"}
-  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/global.png"}
-  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/telegram.png"}
-  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/private.png"}
-  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/match.png"}
-  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/ads.png"}
-  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/reject.png"}
-  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/pass.png"}
-  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/direct.png"}
+  - {name: 节点选择, type: select, proxies: [香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/proxy.png"}
+  - {name: 网络测试, type: select, proxies: [全球直连, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/networktest.png"}
+  - {name: AI 平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ai.png"}
+  - {name: Trackerslist, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/trackerslist.png"}
+  - {name: 游戏服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games-cn.png"}
+  - {name: 微软服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/microsoft-cn.png"}
+  - {name: 谷歌服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/google-cn.png"}
+  - {name: 苹果服务, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/apple-cn.png"}
+  - {name: 国外媒体, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/media.png"}
+  - {name: 游戏平台, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/games.png"}
+  - {name: 直连域名, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cn.png"}
+  - {name: 直连 IP, type: select, proxies: [全球直连, 节点选择], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/cnip.png"}
+  - {name: 代理顶级域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 代理域名, type: select, proxies: [节点选择, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/global.png"}
+  - {name: 电报消息, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/telegram.png"}
+  - {name: 私有网络, type: select, proxies: [全球直连], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/private.png"}
+  - {name: 漏网之鱼, type: select, proxies: [节点选择, 香港节点, 台湾节点, 日本节点, 新加坡节点, 美国节点, 全球直连], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/match.png"}
+  - {name: 广告域名, type: select, proxies: [全球拦截, 全球绕过], icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/ads.png"}
+  - {name: 全球拦截, type: select, proxies: [REJECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/reject.png"}
+  - {name: 全球绕过, type: select, proxies: [PASS], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/pass.png"}
+  - {name: 全球直连, type: select, proxies: [DIRECT], hidden: true, icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/direct.png"}
 
-  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/hongkong.png"}
-  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/taiwan.png"}
-  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/japan.png"}
-  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/singapore.png"}
-  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/Yat-Muk/ruleset_geodata/releases/download/icons/unitedstates.png"}
+  - {name: 香港节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇭🇰|港|hk|hongkong|hong kong)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/hongkong.png"}
+  - {name: 台湾节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇹🇼|台|tw|taiwan|tai wan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/taiwan.png"}
+  - {name: 日本节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇯🇵|日|jp|japan)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/japan.png"}
+  - {name: 新加坡节点, type: url-test, tolerance: 50, use: [🛫 机场订阅], filter: "(?i)(🇸🇬|新|sg|singapore)", icon: "https://github.com/DustinWin/ruleset_geodata/releases/download/icons/singapore.png"}
+  - {name: 美国节点, type: url-test, tolerance: 100, use: [🛫 机场订阅], filter: "(?i)(🇺🇸|美|us|unitedstates|united states)", icon: "https://github.com/YDustinWin/ruleset_geodata/releases/download/icons/unitedstates.png"}
 
 rules:
   - GEOSITE,private,私有网络
