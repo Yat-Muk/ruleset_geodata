@@ -17,6 +17,7 @@ jobs:
       - name: Set variables
         run: |
           echo "update_version=$(date -d '+8 hours' +%Y-%m-%d)" >> ${GITHUB_ENV}
+          echo "update_time=$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')" >> ${GITHUB_ENV}
           echo "singbox_core_release_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
           echo "singbox_core_last1_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/ {last=$0} END {print last}' | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_core_last2_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
@@ -226,6 +227,81 @@ jobs:
             curl -sSL "${ips_download_url}/${ip}.list" > "./tools/rules/${ip}/${ip}.list"
           done
 
+      - name: Generate `mihomo` rule-set (yaml)
+        run: |
+          set -eo pipefail
+          
+          mkdir -p ./mihomo-ruleset-yaml/
+          
+          # 聲明您在 run-2.yml 中使用的完整規則列表
+          domains=(ads trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
+          ips=(netflixip mediaip gamesip privateip cnip telegramip)
+          
+          # 來自您範例的 'generate_yaml_ruleset' 函式
+          generate_yaml_ruleset() {
+            local item_name=$1
+            local download_url=$2
+            local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
+            
+            echo "Generating YAML ruleset for: ${item_name}"
+
+            local content
+            # 下載並過濾有效的規則行
+            content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
+            
+            # 計算每種規則的數量
+            local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
+            count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
+            count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
+            count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
+            count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
+            count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
+            count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
+            total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+            
+            # 規則名稱首字母大寫
+            local name
+            name=$(echo "${item_name}" | sed -e "s/^\(.\)/\U\1/")
+            
+            # 寫入 YAML 標頭
+            {
+              echo "# NAME: ${name}"
+              echo "# AUTHOR: Yat-Muk"
+              echo "# REPO: https://github.com/Yat-Muk/ruleset_geodata"
+              echo "# UPDATED: ${{ env.update_time }}"
+              echo "# DOMAIN: ${count_domain}"
+              echo "# DOMAIN-KEYWORD: ${count_keyword}"
+              echo "# DOMAIN-SUFFIX: ${count_suffix}"
+              echo "# DOMAIN-REGEX: ${count_regex}"
+              echo "# IP-CIDR: ${count_ipcidr}"
+              echo "# PROCESS-NAME: ${count_process}"
+              echo "# TOTAL: ${total}"
+              echo "payload:"
+            } > "${output_file}"
+            
+            # 寫入 payload 內容
+            if [ -n "${content}" ]; then
+              echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
+            fi
+          }
+
+          # 循環生成所有 domain 規則
+          for item in "${domains[@]}"; do
+            generate_yaml_ruleset "${item}" "${domains_download_url}/${item}.list"
+          done
+          
+          # 處理 'applications'
+          generate_yaml_ruleset "applications" "${domains_download_url}/applications.list"
+
+          # 處理 'fakeip-filter'
+          generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
+          generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
+          
+          # 循環生成所有 ip 規則
+          for item in "${ips[@]}"; do
+            generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
+          done
+
       - name: Generate `mihomo` rule-set (mrs) and move .list files
         run: |
           curl -L https://github.com/DustinWin/proxy-tools/releases/download/mihomo/mihomo-meta-linux-amd64v3.tar.gz | tar -zx -C ./tools/
@@ -338,8 +414,8 @@ jobs:
           tag: mihomo-ruleset
           overwrite: true
           body: |
-            [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 规则集文件
-            规则集文件更新于 ${{ env.update_version }}
+            [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 規則集文件
+            規則集文件更新于 ${{ env.update_version }}
           file_glob: true
           file: ./mihomo-ruleset/*
 
@@ -350,9 +426,33 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout -b mihomo-ruleset
-          git add . && git commit -m "mihomo 内核 rule-set 规则集文件更新于 ${update_version}"
+          git add . && git commit -m "mihomo 内核 rule-set 規則集文件更新于 ${update_version}"
           git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push -f origin mihomo-ruleset
+
+      - name: Release and upload `mihomo-ruleset-yaml` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: mihomo-ruleset-yaml
+          tag: mihomo-ruleset-yaml
+          overwrite: true
+          body: |
+            [mihomo 内核](https://github.com/MetaCubeX/mihomo) YAML rule-set 規則集文件
+            規則集文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./mihomo-ruleset-yaml/*
+
+      - name: Commit and push `mihomo-ruleset-yaml` branch
+        run: |
+          cd ./mihomo-ruleset-yaml/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b mihomo-ruleset-yaml
+          git add . && git commit -m "mihomo 内核 YAML rule-set 規則集文件更新于 ${update_version}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin mihomo-ruleset-yaml
 
       - name: Release and upload `sing-box-geodata` assets
         uses: svenstaro/upload-release-action@v2
@@ -386,9 +486,9 @@ jobs:
           tag: sing-box-ruleset-compatible
           overwrite: true
           body: |
-            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 规则集文件
-            适用于 v${{ env.singbox_core_old_version }}-v${{ env.singbox_core_new_version }}（不包含）系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_old_version }}`）
-            规则集文件更新于 ${{ env.update_version }}
+            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 規則集文件
+            適用於 v${{ env.singbox_core_old_version }}-v${{ env.singbox_core_new_version }}（不包含）系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_old_version }}`）
+            規則集文件更新于 ${{ env.update_version }}
           file_glob: true
           file: ./sing-box-ruleset-compatible/*
 
@@ -399,7 +499,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout -b sing-box-ruleset-compatible
-          git add . && git commit -m "sing-box 内核 rule_set 规则集文件更新于 ${update_version}"
+          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${update_version}"
           git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push -f origin sing-box-ruleset-compatible
 
@@ -412,9 +512,9 @@ jobs:
           tag: sing-box-ruleset
           overwrite: true
           body: |
-            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 规则集文件
-            适用于 v${{ env.singbox_core_new_version }} 系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_new_version }}`）
-            规则集文件更新于 ${{ env.update_version }}
+            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 規則集文件
+            適用於 v${{ env.singbox_core_new_version }} 系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_new_version }}`）
+            規則集文件更新于 ${{ env.update_version }}
           file_glob: true
           file: ./sing-box-ruleset/*
 
@@ -427,9 +527,9 @@ jobs:
           tag: sing-box-ruleset
           overwrite: true
           body: |
-            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 规则集文件
-            适用于 v${{ env.singbox_core_new_version }}（包含）+ 系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_new_version }}`）
-            规则集文件更新于 ${{ env.update_version }}
+            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 規則集文件
+            適用於 v${{ env.singbox_core_new_version }}（包含）+ 系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_new_version }}`）
+            規則集文件更新于 ${{ env.update_version }}
           file_glob: true
           file: ./sing-box-ruleset/*
 
@@ -440,7 +540,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout -b sing-box-ruleset
-          git add . && git commit -m "sing-box 内核 rule_set 规则集文件更新于 ${update_version}"
+          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${update_version}"
           git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push -f origin sing-box-ruleset
 
@@ -457,6 +557,10 @@ jobs:
           cd ../mihomo-ruleset/ || exit 1
           for file in $(ls); do
             curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset/${file}"
+          done
+          cd ../mihomo-ruleset-yaml/ || exit 1
+          for file in $(ls); do
+            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset-yaml/${file}"
           done
           cd ../sing-box-ruleset-compatible/ || exit 1
           for file in $(ls); do
