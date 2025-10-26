@@ -239,7 +239,7 @@ jobs:
           # 'ips' 列表保持不變，因為 'adsip' 將被合併到 'ads.yaml'
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
           
-          # 'generate_yaml_ruleset' 函式保持不變
+          # --- 函式 1: 生成標準 YAML 規則集 ---
           generate_yaml_ruleset() {
             local item_name=$1
             local download_url=$2
@@ -281,6 +281,54 @@ jobs:
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
           }
+          
+          # --- 函式 2: 生成 'ads' 的合併 YAML 規則集 ---
+          generate_merged_ads_ruleset() {
+            echo "Generating MERGED YAML ruleset for: ads"
+            local item_name="ads"
+            local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
+            
+            # 1. 獲取 domain 和 ip 的內容
+            local content_domain content_ip content
+            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
+            content_ip=$(curl -sSL "${ips_download_url}/adsip.list" | grep -E '^(IP-CIDR)')
+            
+            # 2. 合併內容 (使用 grep . 來去除可能的空行)
+            content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
+            
+            # 3. 對合併後的內容進行計數
+            local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
+            count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
+            count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
+            count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
+            count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
+            count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
+            count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
+            total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+            
+            # 4. 寫入標頭
+            {
+              echo "# NAME: Ads"
+              echo "# AUTHOR: Yat-Muk"
+              echo "# REPO: https://github.com/Yat-Muk/ruleset_geodata"
+              echo "# UPDATED: ${{ env.update_time }}"
+              echo "# DOMAIN: ${count_domain}"
+              echo "# DOMAIN-KEYWORD: ${count_keyword}"
+              echo "# DOMAIN-SUFFIX: ${count_suffix}"
+              echo "# DOMAIN-REGEX: ${count_regex}"
+              echo "# IP-CIDR: ${count_ipcidr}"
+              echo "# PROCESS-NAME: ${count_process}"
+              echo "# TOTAL: ${total}"
+              echo "payload:"
+            } > "${output_file}"
+            
+            # 5. 寫入 payload
+            if [ -n "${content}" ]; then
+              echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
+            fi
+          }
+
+          # --- 腳本執行 ---
 
           # 循環生成所有 'domains' 規則 (已排除 'ads')
           for item in "${domains[@]}"; do
@@ -299,50 +347,8 @@ jobs:
             generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
           done
           
-          # --- 'ads' 的特殊合併處理 ---
-          echo "Generating MERGED YAML ruleset for: ads"
-          local item_name="ads"
-          local output_file="./mihomo-ruleset-yaml/${item_name}.yaml"
-          
-          # 1. 獲取 domain 和 ip 的內容
-          local content_domain content_ip content
-          content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)')
-          content_ip=$(curl -sSL "${ips_download_url}/adsip.list" | grep -E '^(IP-CIDR)')
-          
-          # 2. 合併內容 (使用 grep . 來去除可能的空行)
-          content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
-          
-          # 3. 對合併後的內容進行計數
-          local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
-          count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
-          count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
-          count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
-          count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
-          count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
-          count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
-          total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
-          
-          # 4. 寫入標頭
-          {
-            echo "# NAME: Ads"
-            echo "# AUTHOR: Yat-Muk"
-            echo "# REPO: https://github.com/Yat-Muk/ruleset_geodata"
-            echo "# UPDATED: ${{ env.update_time }}"
-            echo "# DOMAIN: ${count_domain}"
-            echo "# DOMAIN-KEYWORD: ${count_keyword}"
-            echo "# DOMAIN-SUFFIX: ${count_suffix}"
-            echo "# DOMAIN-REGEX: ${count_regex}"
-            echo "# IP-CIDR: ${count_ipcidr}"
-            echo "# PROCESS-NAME: ${count_process}"
-            echo "# TOTAL: ${total}"
-            echo "payload:"
-          } > "${output_file}"
-          
-          # 5. 寫入 payload
-          if [ -n "${content}" ]; then
-            echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
-          fi
-          # --- 'ads' 處理結束 ---
+          # 最後，呼叫 'ads' 的特殊合併函式
+          generate_merged_ads_ruleset
 
       - name: Generate `mihomo` rule-set (mrs) and move .list files
         run: |
@@ -390,7 +396,7 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-            sed -i 's/"version": ${{ env.singbox_rules_L2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
+            sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
             chmod +x ./convert.sh && ./convert.sh
             mv -f ./*.json ./*.srs ../sing-box-ruleset/
             rm -rf ./sing-box* ./rules*
