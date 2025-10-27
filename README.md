@@ -454,7 +454,7 @@ rules:
 
 # 二、 ruleset 规则集文件说明
 ## 1. 文件类型
-① [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 规则集文件，格式有 `.list`（`format: text`）和 `.mrs`（`format: mrs`）  
+① [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 规则集文件，格式有 `.yaml`（`format: yaml`）、`.list`（`format: text`）和 `.mrs`（`format: mrs`）  
 ② [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 规则集文件，格式有 `.json`（`"format": "source"`）和 `.srs`（`"format": "binary"`）
 ## 2. 数据源
 ① 每天凌晨 3 点（北京时间 UTC+8）自动构建，由上游项目 [Yat-Muk/domain-list-custom](https://github.com/Yat-Muk/domain-list-custom) 和 [Yat-Muk/geoip](https://github.com/Yat-Muk/geoip) 提供数据源，可查看[域名列表](https://github.com/Yat-Muk/domain-list-custom/tree/domains)和 [IP 段列表](https://github.com/Yat-Muk/geoip/tree/ips)  
