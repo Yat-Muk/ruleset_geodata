@@ -30,22 +30,25 @@ jobs:
         shell: bash
 
       - name: Clone Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
+        with:
+          # We need to fetch all history and tags for the release action
+          fetch-depth: 0
 
       - name: Checkout DustinWin/domain-list-custom
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: DustinWin/domain-list-custom
           path: custom
 
       - name: Checkout v2fly/domain-list-community
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: v2fly/domain-list-community
           path: community
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./custom/go.mod
           cache-dependency-path: ./custom/go.sum
@@ -148,7 +151,7 @@ jobs:
 
       - name: Download `mihomo` rule-set files
         run: |
-          mkdir -p ./mihomo-ruleset/
+          mkdir -p ./mihomo-ruleset/ ./tools/
           domains=(ads private trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
 
@@ -159,9 +162,9 @@ jobs:
               sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
               > "./tools/domains/${domain}/${domain}.list"
             if [ ! -s "./tools/domains/${domain}/${domain}.list" ]; then
-               echo "Warning: Filtered list for ${domain} is empty. Removing."
-               rm -f "./tools/domains/${domain}/${domain}.list"
-               rmdir --ignore-fail-on-non-empty "./tools/domains/${domain}/"
+              echo "Warning: Filtered list for ${domain} is empty. Removing."
+              rm -f "./tools/domains/${domain}/${domain}.list"
+              rmdir --ignore-fail-on-non-empty "./tools/domains/${domain}/"
             fi
           done
 
@@ -171,31 +174,31 @@ jobs:
             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
             > "./tools/domains/fakeip-filter/fakeip-filter.list"
           if [ ! -s "./tools/domains/fakeip-filter/fakeip-filter.list" ]; then
-             echo "Warning: Filtered list for fakeip-filter is empty. Removing."
-             rm -f "./tools/domains/fakeip-filter/fakeip-filter.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter/"
+            echo "Warning: Filtered list for fakeip-filter is empty. Removing."
+            rm -f "./tools/domains/fakeip-filter/fakeip-filter.list"
+            rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter/"
           fi
 
           mkdir -p ./tools/domains/fakeip-filter-lite/
-           curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | \
+            curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | \
             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
             > "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
           if [ ! -s "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list" ]; then
-             echo "Warning: Filtered list for fakeip-filter-lite is empty. Removing."
-             rm -f "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter-lite/"
+            echo "Warning: Filtered list for fakeip-filter-lite is empty. Removing."
+            rm -f "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
+            rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter-lite/"
           fi
 
-           mkdir -p ./tools/domains/private/
-           curl -sSL "${domains_download_url}/private.list" | \
+            mkdir -p ./tools/domains/private/
+            curl -sSL "${domains_download_url}/private.list" | \
             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
             > "./tools/domains/private/private.list"
           if [ ! -s "./tools/domains/private/private.list" ]; then
-             echo "Warning: Filtered list for private is empty. Removing."
-             rm -f "./tools/domains/private/private.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/private/"
+            echo "Warning: Filtered list for private is empty. Removing."
+            rm -f "./tools/domains/private/private.list"
+            rmdir --ignore-fail-on-non-empty "./tools/domains/private/"
           fi
 
           curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
@@ -214,11 +217,11 @@ jobs:
               sed 's/^IP-CIDR,\|^IP-CIDR6,//' \
               > "./tools/ips/${ip}/${ip}.list"
 
-             if [ ! -s "./tools/ips/${ip}/${ip}.list" ]; then
-               echo "Warning: Filtered list for ${ip} is empty. Removing."
-               rm -f "./tools/ips/${ip}/${ip}.list"
-               rmdir --ignore-fail-on-non-empty "./tools/ips/${ip}/"
-            fi
+              if [ ! -s "./tools/ips/${ip}/${ip}.list" ]; then
+                echo "Warning: Filtered list for ${ip} is empty. Removing."
+                rm -f "./tools/ips/${ip}/${ip}.list"
+                rmdir --ignore-fail-on-non-empty "./tools/ips/${ip}/"
+              fi
           done
 
           rm -rf ./tmp/
@@ -356,9 +359,9 @@ jobs:
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
           for item in "${ips[@]}"; do
-             if [[ "$item" != "adsip" ]]; then # adsip is handled by merge function
-               generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
-             fi
+              if [[ "$item" != "adsip" ]]; then # adsip is handled by merge function
+                generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
+              fi
           done
           generate_merged_ads_ruleset
 
@@ -371,30 +374,64 @@ jobs:
 
           domain_files=($(find ./domains/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
           for file_path in "${domain_files[@]}"; do
-             dir_name=$(basename $(dirname "$file_path"))
-             if [ -s "$file_path" ]; then
+              dir_name=$(basename $(dirname "$file_path"))
+              if [ -s "$file_path" ]; then
                 echo "Converting domain ruleset: ${dir_name}"
                 ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
-             else
+              else
                 echo "Skipping empty domain list file: $file_path"
-             fi
-             mv -f "$file_path" ../mihomo-ruleset/
+              fi
+              mv -f "$file_path" ../mihomo-ruleset/
           done
 
           ip_files=($(find ./ips/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
-           for file_path in "${ip_files[@]}"; do
-             dir_name=$(basename $(dirname "$file_path"))
-             if [ -s "$file_path" ]; then
+            for file_path in "${ip_files[@]}"; do
+              dir_name=$(basename $(dirname "$file_path"))
+              if [ -s "$file_path" ]; then
                 echo "Converting ipcidr ruleset: ${dir_name}"
                 ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
-             else
-               echo "Skipping empty ip list file: $file_path"
-             fi
-             mv -f "$file_path" ../mihomo-ruleset/
-          done
+              else
+                echo "Skipping empty ip list file: $file_path"
+              fi
+              mv -f "$file_path" ../mihomo-ruleset/
+            done
 
           find ./domains/ ./ips/ -maxdepth 1 -mindepth 1 -type d -empty -delete 2>/dev/null
           rm -rf ./mihomo* ./domains/ ./ips/
+
+      - name: Create convert.sh for sing-box
+        run: |
+          mkdir -p ./tools/
+          cat << 'EOF' > ./tools/convert.sh
+          #!/bin/bash
+          set -e
+          
+          # This script is executed inside the ./tools/ directory
+          
+          # Default version, will be replaced by sed in the workflow
+          RULESET_VERSION=1
+          
+          # Find all .list files in ./rules/ subdirectories
+          RULE_FILES=($(find ./rules/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
+          
+          for file_path in "${RULE_FILES[@]}"; do
+            dir_name=$(basename $(dirname "$file_path"))
+            echo "Processing sing-box ruleset: ${dir_name}"
+            
+            # Generate JSON output
+            ./sing-box rule-set compile --type list --format text "$file_path" --output "${dir_name}.json"
+            
+            # Inject the version number into the JSON file
+            # Use jq to add a "version" key
+            jq --argjson v "$RULESET_VERSION" '. + {version: $v}' "${dir_name}.json" > tmp.$$.json && mv tmp.$$.json "${dir_name}.json"
+            
+            # Generate SRS output from the version-injected JSON
+            ./sing-box rule-set compile --type list --format json "${dir_name}.json" --output "${dir_name}.srs"
+          done
+          
+          echo "sing-box ruleset conversion complete."
+          EOF
+          chmod +x ./tools/convert.sh
 
       - name: Generate `sing-box` rule_set (srs) and move .json files
         run: |
@@ -409,10 +446,9 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
             cd ./tools/
-            # Assuming convert.sh exists and works as intended
             if [[ -f "./convert.sh" ]]; then
-              sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-              chmod +x ./convert.sh && ./convert.sh
+              sed -i 's/RULESET_VERSION=1/RULESET_VERSION=${{ env.singbox_rules_last2_version }}/' ./convert.sh
+              ./convert.sh
               mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
             else
               echo "Error: convert.sh not found in ./tools/"
@@ -425,15 +461,15 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-             if [[ -f "./convert.sh" ]]; then
-              sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
-              chmod +x ./convert.sh && ./convert.sh
+              if [[ -f "./convert.sh" ]]; then
+              sed -i 's/RULESET_VERSION=${{ env.singbox_rules_last2_version }}/RULESET_VERSION=${{ env.singbox_rules_last1_version }}/' ./convert.sh
+              ./convert.sh
               mv -f ./*.json ./*.srs ../sing-box-ruleset/
-            else
+              else
               echo "Error: convert.sh not found in ./tools/"
               exit 1
             fi
-            rm -rf ./sing-box* ./rules*
+            rm -rf ./sing-box* ./rules* ./convert.sh
           else
             echo "singbox_core_old_version=${{ env.singbox_core_last3_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
@@ -445,13 +481,13 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset-compatible/
             cd ./tools/
-             if [[ -f "./convert.sh" ]]; then
-              sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last3_version }}/' ./convert.sh
-              chmod +x ./convert.sh && ./convert.sh
+              if [[ -f "./convert.sh" ]]; then
+              sed -i 's/RULESET_VERSION=1/RULESET_VERSION=${{ env.singbox_rules_last3_version }}/' ./convert.sh
+              ./convert.sh
               mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
-            else
-               echo "Error: convert.sh not found in ./tools/"
-               exit 1
+              else
+                echo "Error: convert.sh not found in ./tools/"
+                exit 1
             fi
             rm -rf ./sing-box*
 
@@ -460,137 +496,16 @@ jobs:
             mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
             mkdir -p ./sing-box-ruleset/
             cd ./tools/
-             if [[ -f "./convert.sh" ]]; then
-              sed -i 's/"version": ${{ env.singbox_rules_last3_version }}/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-              chmod +x ./convert.sh && ./convert.sh
+              if [[ -f "./convert.sh" ]]; then
+              sed -i 's/RULESET_VERSION=${{ env.singbox_rules_last3_version }}/RULESET_VERSION=${{ env.singbox_rules_last2_version }}/' ./convert.sh
+              ./convert.sh
               mv -f ./*.json ./*.srs ../sing-box-ruleset/
-            else
-               echo "Error: convert.sh not found in ./tools/"
-               exit 1
+              else
+                echo "Error: convert.sh not found in ./tools/"
+                exit 1
             fi
-            rm -rf ./sing-box* ./rules*
+            rm -rf ./sing-box* ./rules* ./convert.sh
           fi
-
-      - name: Release and upload `mihomo-geodata` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: mihomo-geodata
-          tag: mihomo-geodata
-          overwrite: true
-          body: |
-            [mihomo 内核](https://github.com/MetaCubeX/mihomo) geodata 文件
-            geodata 文件更新于 ${{ env.update_version }}
-          file_glob: true
-          file: ./mihomo-geodata/*
-
-      - name: Commit and push `mihomo-geodata` branch
-        run: |
-          cd ./mihomo-geodata/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b mihomo-geodata
-          git add . && git commit -m "mihomo 内核 geodata 文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f origin mihomo-geodata
-
-      - name: Release and upload `mihomo-ruleset` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: mihomo-ruleset
-          tag: mihomo-ruleset
-          overwrite: true
-          body: |
-            [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 規則集文件
-            規則集文件更新于 ${{ env.update_version }}
-          file_glob: true
-          file: ./mihomo-ruleset/*
-
-      - name: Commit and push `mihomo-ruleset` branch
-        run: |
-          cd ./mihomo-ruleset/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b mihomo-ruleset
-          git add . && git commit -m "mihomo 内核 rule-set 規則集文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f origin mihomo-ruleset
-
-      - name: Release and upload `mihomo-ruleset-yaml` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: mihomo-ruleset-yaml
-          tag: mihomo-ruleset-yaml
-          overwrite: true
-          body: |
-            [mihomo 内核](https://github.com/MetaCubeX/mihomo) YAML rule-set 規則集文件
-            規則集文件更新于 ${{ env.update_version }}
-          file_glob: true
-          file: ./mihomo-ruleset-yaml/*
-
-      - name: Commit and push `mihomo-ruleset-yaml` branch
-        run: |
-          cd ./mihomo-ruleset-yaml/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b mihomo-ruleset-yaml
-          git add . && git commit -m "mihomo 内核 YAML rule-set 規則集文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f origin mihomo-ruleset-yaml
-
-      - name: Release and upload `sing-box-geodata` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: sing-box-geodata
-          tag: sing-box-geodata
-          overwrite: true
-          body: |
-            [sing-box 内核](https://github.com/SagerNet/sing-box) geodata 文件
-            geodata 文件更新于 ${{ env.update_version }}
-          file_glob: true
-          file: ./sing-box-geodata/*
-
-      - name: Commit and push `sing-box-geodata` branch
-        run: |
-          cd ./sing-box-geodata/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b sing-box-geodata
-          git add . && git commit -m "sing-box 内核 geodata 文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f origin sing-box-geodata
-
-      - name: Release and upload `sing-box-ruleset-compatible` assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          release_name: sing-box-ruleset-compatible
-          tag: sing-box-ruleset-compatible
-          overwrite: true
-          body: |
-            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 規則集文件
-            適用於 v${{ env.singbox_core_old_version }}-v${{ env.singbox_core_new_version }}（不包含）系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_old_version }}`）
-            規則集文件更新于 ${{ env.update_version }}
-          file_glob: true
-          file: ./sing-box-ruleset-compatible/*
-
-      - name: Commit and push `sing-box-ruleset-compatible` branch
-        run: |
-          cd ./sing-box-ruleset-compatible/ || exit 1
-          git init
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git checkout -b sing-box-ruleset-compatible
-          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${update_version}"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f origin sing-box-ruleset-compatible
 
       - name: Release and upload `sing-box-ruleset` assets
         if: ${{ env.singbox_equal == 'true' }}
@@ -629,12 +544,135 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git checkout -b sing-box-ruleset
-          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${update_version}"
+          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${{ env.update_version }}"
           git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
           git push -f origin sing-box-ruleset
 
+      - name: Release and upload `mihomo-geodata` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: mihomo-geodata
+          tag: mihomo-geodata
+          overwrite: true
+          body: |
+            [mihomo 内核](https://github.com/MetaCubeX/mihomo) geodata 文件
+            geodata 文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./mihomo-geodata/*
+
+      - name: Commit and push `mihomo-geodata` branch
+        run: |
+          cd ./mihomo-geodata/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b mihomo-geodata
+          git add . && git commit -m "mihomo 内核 geodata 文件更新于 ${{ env.update_version }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin mihomo-geodata
+
+      - name: Release and upload `mihomo-ruleset` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: mihomo-ruleset
+          tag: mihomo-ruleset
+          overwrite: true
+          body: |
+            [mihomo 内核](https://github.com/MetaCubeX/mihomo) rule-set 規則集文件
+            規則集文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./mihomo-ruleset/*
+
+      - name: Commit and push `mihomo-ruleset` branch
+        run: |
+          cd ./mihomo-ruleset/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b mihomo-ruleset
+          git add . && git commit -m "mihomo 内核 rule-set 規則集文件更新于 ${{ env.update_version }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin mihomo-ruleset
+
+      - name: Release and upload `mihomo-ruleset-yaml` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: mihomo-ruleset-yaml
+          tag: mihomo-ruleset-yaml
+          overwrite: true
+          body: |
+            [mihomo 内核](https://github.com/MetaCubeX/mihomo) YAML rule-set 規則集文件
+            規則集文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./mihomo-ruleset-yaml/*
+
+      - name: Commit and push `mihomo-ruleset-yaml` branch
+        run: |
+          cd ./mihomo-ruleset-yaml/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b mihomo-ruleset-yaml
+          git add . && git commit -m "mihomo 内核 YAML rule-set 規則集文件更新于 ${{ env.update_version }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin mihomo-ruleset-yaml
+
+      - name: Release and upload `sing-box-geodata` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: sing-box-geodata
+          tag: sing-box-geodata
+          overwrite: true
+          body: |
+            [sing-box 内核](https://github.com/SagerNet/sing-box) geodata 文件
+            geodata 文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./sing-box-geodata/*
+
+      - name: Commit and push `sing-box-geodata` branch
+        run: |
+          cd ./sing-box-geodata/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b sing-box-geodata
+          git add . && git commit -m "sing-box 内核 geodata 文件更新于 ${{ env.update_version }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin sing-box-geodata
+
+      - name: Release and upload `sing-box-ruleset-compatible` assets
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_name: sing-box-ruleset-compatible
+          tag: sing-box-ruleset-compatible
+          overwrite: true
+          body: |
+            [sing-box 内核](https://github.com/SagerNet/sing-box) rule_set 規則集文件
+            適用於 v${{ env.singbox_core_old_version }}-v${{ env.singbox_core_new_version }}（不包含）系列版本的 sing-box 内核（`"version": ${{ env.singbox_ruleset_old_version }}`）
+            規則集文件更新于 ${{ env.update_version }}
+          file_glob: true
+          file: ./sing-box-ruleset-compatible/*
+
+      - name: Commit and push `sing-box-ruleset-compatible` branch
+        run: |
+          cd ./sing-box-ruleset-compatible/ || exit 1
+          git init
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git checkout -b sing-box-ruleset-compatible
+          git add . && git commit -m "sing-box 内核 rule_set 規則集文件更新于 ${{ env.update_version }}"
+          git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+          git push -f origin sing-box-ruleset-compatible
+
       - name: Purge jsDelivr CDN
         run: |
+          # Adding error tolerance in case some files don't exist yet
+          set +e
           cd ./mihomo-geodata/ || exit 1
           for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-geodata/${file}"; done
           cd ../sing-box-geodata/ || exit 1
@@ -647,6 +685,7 @@ jobs:
           for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"; done
           cd ../sing-box-ruleset/ || exit 1
           for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset/${file}"; done
+          set -e
 
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
