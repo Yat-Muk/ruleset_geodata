@@ -13,6 +13,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Set variables
         run: |
@@ -24,7 +26,7 @@ jobs:
 
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
           
-          echo "singbox_core_release_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
+          echo "singbox_core_release_version=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
           
           echo "singbox_core_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_core_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
@@ -144,19 +146,22 @@ jobs:
         run: |
           mkdir -p ./mihomo-geodata/ ./sing-box-geodata/
           
-          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '.mmdb' | awk -F '"' '{print $4}' | while read url; do
+          curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/DustinWin/geoip/releases > geoip_releases.json
+          
+          grep '"browser_download_url"' geoip_releases.json | grep '.mmdb' | awk -F '"' '{print $4}' | while read url; do
             wget -q -P ./mihomo-geodata/ "$url" &
           done
 
-          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/mihomo-geodata/' | grep -v '.mmdb' | awk -F '"' '{print $4}' | while read url; do
+          grep '"browser_download_url"' geoip_releases.json | grep '/mihomo-geodata/' | grep -v '.mmdb' | awk -F '"' '{print $4}' | while read url; do
              wget -q -P ./community/ "$url" &
           done
 
-          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/sing-box-geodata/' | awk -F '"' '{print $4}' | while read url; do
+          grep '"browser_download_url"' geoip_releases.json | grep '/sing-box-geodata/' | awk -F '"' '{print $4}' | while read url; do
              wget -q -P ./community/ "$url" &
           done
           
           wait
+          rm -f geoip_releases.json
 
       - name: Move 'mihomo' and 'sing-box' geodata files
         run: |
