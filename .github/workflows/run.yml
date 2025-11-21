@@ -25,7 +25,7 @@ jobs:
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
 
           # =======================================================
-          # [配置區域] AdGuard DNS Filter 源管理 (Sing-box >= 1.10.0)
+          # AdGuard DNS Filter 源管理 (Sing-box >= 1.10.0)
           # =======================================================
           {
             echo "ADGUARD_SOURCES_CONFIG<<EOF"
@@ -38,7 +38,21 @@ jobs:
 
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
           
-          echo "singbox_core_release_version=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
+          # [API 熔斷機制] 嘗試獲取最新版本，如果因限流失敗，則使用預設版本
+          echo "Fetching latest sing-box version..."
+          TAG_NAME=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' || echo "")
+          
+          # 檢查獲取到的 TAG 是否有效 (是否包含 'v')
+          if [[ "$TAG_NAME" != v* ]]; then
+             echo "WARNING: GitHub API Rate Limit exceeded or API failed. Using Fallback Version."
+             # 指定的版本 v1.12.12 作為備用
+             TAG_NAME="v1.12.12" 
+          fi
+          
+          # 設置版本變量
+          RELEASE_VERSION=$(echo "$TAG_NAME" | sed -E 's/([0-9]+)$/0/')
+          echo "Using sing-box version: $RELEASE_VERSION (Tag: $TAG_NAME)"
+          echo "singbox_core_release_version=$RELEASE_VERSION" >> ${GITHUB_ENV}
           
           echo "singbox_core_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_core_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
@@ -158,7 +172,9 @@ jobs:
         run: |
           mkdir -p ./mihomo-geodata/ ./sing-box-geodata/
           
-          curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/DustinWin/geoip/releases > geoip_releases.json
+          # [API 熔斷機制] 嘗試獲取 Release，如果失敗則跳過 (防止卡住)
+          echo "Fetching GeoIP releases..."
+          curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/DustinWin/geoip/releases > geoip_releases.json || echo "{}" > geoip_releases.json
           
           grep '"browser_download_url"' geoip_releases.json | grep '.mmdb' | awk -F '"' '{print $4}' | while read url; do
             wget -q -P ./mihomo-geodata/ "$url" &
@@ -428,7 +444,7 @@ jobs:
              chmod +x ./sing-box
              
              # ================= [AdGuard 編譯邏輯 (Convert Mode)] =================
-             # 1. 版本檢查 (Sing-box >= 1.10.0 支持 AdGuard 格式轉換)
+             # 1. 版本檢查
              local ver_major=$(echo "$version" | cut -d. -f1)
              local ver_minor=$(echo "$version" | cut -d. -f2)
              
@@ -470,7 +486,6 @@ jobs:
              if [[ -f "./convert.sh" ]]; then
                sed -i "s/\"version\": [0-9]\+/\"version\": ${rules_version}/" ./convert.sh
                chmod +x ./convert.sh && ./convert.sh
-               # 移動所有生成的 .srs 文件 (包括 adguard.srs)
                mv -f ./*.json ./*.srs "../${target_dir}/"
              else
                echo "Error: convert.sh not found"
