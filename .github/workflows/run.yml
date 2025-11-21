@@ -38,14 +38,14 @@ jobs:
 
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
           
-          # [API 熔斷機制] 嘗試獲取最新版本，如果因限流失敗，則使用預設版本
+          # 嘗試獲取最新版本，如果因限流失敗，則使用預設版本
           echo "Fetching latest sing-box version..."
           TAG_NAME=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' || echo "")
           
           # 檢查獲取到的 TAG 是否有效 (是否包含 'v')
           if [[ "$TAG_NAME" != v* ]]; then
              echo "WARNING: GitHub API Rate Limit exceeded or API failed. Using Fallback Version."
-             # 指定的版本 v1.12.12 作為備用
+             # 使用指定的最新版本 v1.12.12 作為備用
              TAG_NAME="v1.12.12" 
           fi
           
@@ -172,9 +172,9 @@ jobs:
         run: |
           mkdir -p ./mihomo-geodata/ ./sing-box-geodata/
           
-          # [API 熔斷機制] 嘗試獲取 Release，如果失敗則跳過 (防止卡住)
+          # 嘗試獲取 Release
           echo "Fetching GeoIP releases..."
-          curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/DustinWin/geoip/releases > geoip_releases.json || echo "{}" > geoip_releases.json
+          curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/Yat-Muk/geoip/releases > geoip_releases.json || echo "{}" > geoip_releases.json
           
           grep '"browser_download_url"' geoip_releases.json | grep '.mmdb' | awk -F '"' '{print $4}' | while read url; do
             wget -q -P ./mihomo-geodata/ "$url" &
