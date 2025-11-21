@@ -24,6 +24,16 @@ jobs:
           echo "domains_download_url=https://raw.githubusercontent.com/Yat-Muk/domain-list-custom/domains" >> ${GITHUB_ENV}
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
 
+          # [配置區域] AdGuard DNS Filter 源管理 (Sing-box >= 1.10.0)
+          {
+            echo "ADGUARD_SOURCES_CONFIG<<EOF"
+            echo "adguard-dns|https://adguardteam.github.io/AdguardFilters/BaseFilter/sections/adservers.txt"
+            echo "adguard-mobile|https://adguardteam.github.io/AdguardFilters/MobileFilter/sections/adservers.txt" 
+            echo "adguard-cn|https://adguardteam.github.io/AdguardFilters/ChineseFilter/sections/adservers.txt" 
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+          # =======================================================
+
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
           
           echo "singbox_core_release_version=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
@@ -407,14 +417,83 @@ jobs:
              local rules_version=$2
              local target_dir=$3
              
+             # 下載 sing-box
              curl -L "https://github.com/SagerNet/sing-box/releases/download/v${version}/sing-box-${version}-linux-amd64.tar.gz" | tar -zx -C ./tools/
              mv -f "./tools/sing-box-${version}-linux-amd64/sing-box" ./tools/sing-box
              mkdir -p "$target_dir"
              
              cd ./tools/
+             
+             # ================= [AdGuard Unified Compilation with Version Check] =================
+             # 1. 版本檢查：只有 sing-box >= 1.10.0 才支持 adguard 格式
+             local ver_major=$(echo "$version" | cut -d. -f1)
+             local ver_minor=$(echo "$version" | cut -d. -f2)
+             
+             if [[ "$ver_major" -gt 1 ]] || [[ "$ver_major" -eq 1 && "$ver_minor" -ge 10 ]]; then
+                 echo "Sing-box version ${version} >= 1.10.0. Processing AdGuard sources..."
+                 
+                 # 2. 讀取頂部環境變量中的配置
+                 readarray -t RAW_SOURCES <<< "$ADGUARD_SOURCES_CONFIG"
+                 
+                 # 3. 清洗並構建有效的源列表
+                 ADGUARD_SRC_LIST=()
+                 for line in "${RAW_SOURCES[@]}"; do
+                    # 去除首尾空格
+                    line=$(echo "$line" | sed 's/^[ \t]*//;s/[ \t]*$//')
+                    # 過濾空行和註釋行
+                    if [[ -n "$line" && "$line" != \#* ]]; then
+                        ADGUARD_SRC_LIST+=("$line")
+                    fi
+                 done
+                 
+                 if [ ${#ADGUARD_SRC_LIST[@]} -gt 0 ]; then
+                     # 4. 生成 JSON 配置文件
+                     cat > adguard_config.json <<EOF
+                     {
+                       "output": "adguard.srs",
+                       "rule_set": [
+EOF
+                     for i in "${!ADGUARD_SRC_LIST[@]}"; do
+                       item="${ADGUARD_SRC_LIST[$i]}"
+                       tag="${item%%|*}"
+                       url="${item##*|}"
+                       
+                       # JSON 逗號處理
+                       if [[ $i -eq $((${#ADGUARD_SRC_LIST[@]} - 1)) ]]; then
+                         comma=""
+                       else
+                         comma=","
+                       fi
+                       
+                       cat >> adguard_config.json <<EOF
+                         {
+                           "tag": "$tag",
+                           "type": "remote",
+                           "format": "adguard",
+                           "url": "$url",
+                           "download_detour": "direct"
+                         }$comma
+EOF
+                     done
+                     # 結束 JSON
+                     echo "  ]
+                     }" >> adguard_config.json
+                     
+                     # 5. 執行編譯 (允許失敗但不中斷流程)
+                     ./sing-box rule-set compile --config adguard_config.json || echo "AdGuard compilation failed"
+                 else
+                     echo "No active AdGuard sources found in config."
+                 fi
+             else
+                 echo "Skipping AdGuard. Sing-box version ${version} is older than 1.10.0."
+             fi
+             # =================================================================
+
+             # 繼續執行標準規則集的轉換 (convert.sh)
              if [[ -f "./convert.sh" ]]; then
                sed -i "s/\"version\": [0-9]\+/\"version\": ${rules_version}/" ./convert.sh
                chmod +x ./convert.sh && ./convert.sh
+               # 移動所有生成的 .srs 文件 (包含 adguard.srs)
                mv -f ./*.json ./*.srs "../${target_dir}/"
              else
                echo "Error: convert.sh not found"
