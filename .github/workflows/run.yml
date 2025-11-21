@@ -16,62 +16,80 @@ jobs:
     steps:
       - name: Set variables
         run: |
+          set -e
           echo "update_version=$(date -d '+8 hours' +%Y-%m-%d)" >> ${GITHUB_ENV}
           echo "update_time=$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')" >> ${GITHUB_ENV}
-          echo "singbox_core_release_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
-          echo "singbox_core_last1_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/ {last=$0} END {print last}' | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
-          echo "singbox_core_last2_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
-          echo "singbox_core_last3_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
-          echo "singbox_rules_last1_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/ {last=$0} END {print last}' | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
-          echo "singbox_rules_last2_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
-          echo "singbox_rules_last3_version=$(curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html | awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "domains_download_url=https://raw.githubusercontent.com/Yat-Muk/domain-list-custom/domains" >> ${GITHUB_ENV}
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
+          curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
+          echo "singbox_core_release_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
+          echo "singbox_core_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          echo "singbox_core_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          echo "singbox_core_last3_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          echo "singbox_rules_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          echo "singbox_rules_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          echo "singbox_rules_last3_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          
+          rm -f sb_doc.html
         shell: bash
 
       - name: Clone Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Checkout DustinWin/domain-list-custom
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: DustinWin/domain-list-custom
           path: custom
 
       - name: Checkout v2fly/domain-list-community
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           repository: v2fly/domain-list-community
           path: community
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version-file: ./custom/go.mod
           cache-dependency-path: ./custom/go.sum
 
       - name: Generate 'mihomo' geodata
         run: |
+          set -e
           mkdir -p ./community/mydata/
           archs1=(private ads trackerslist microsoft-cn apple-cn google-cn games-cn media games ai networktest tld-proxy gfw proxy cn)
           archs2=(private ads trackerslist microsoft-cn apple-cn google-cn games-cn ai networktest tld-proxy gfw proxy cn)
           archs3=(private microsoft-cn apple-cn google-cn games-cn tld-proxy gfw cn-lite)
 
           cd ./community/
-          for arch1 in "${archs1[@]}"; do
-            curl -sSL "${domains_download_url}/${arch1}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch1}"
+
+          download_and_convert() {
+            curl -sSL "${domains_download_url}/${1}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${1}"
+          }
+
+          for arch in "${archs1[@]}"; do
+            download_and_convert "$arch"
           done
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
+          
+          curl -sSL "${domains_download_url}/fakeip-filter.list" > ./temp_fakeip.list
+          
+          awk '!/^DOMAIN-REGEX,/' ./temp_fakeip.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
+
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
           keyword:stun
           keyword:time
           EOF
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+
+          awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' ./temp_fakeip.list | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+          
           go run ./ --datapath=./mydata/ --outputname geosite-all.dat
 
           rm -f ./mydata/ads ./mydata/fakeip-filter
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
+          
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" > ./temp_fakeip_lite.list
+          awk '!/^DOMAIN-REGEX,/' ./temp_fakeip_lite.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
           keyword:ntp
           keyword:stun
@@ -80,20 +98,23 @@ jobs:
           go run ./ --datapath=./mydata/ --outputname geosite-all-lite.dat
 
           rm -f ./mydata/*
-          for arch2 in "${archs2[@]}"; do
-            curl -sSL "${domains_download_url}/${arch2}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch2}"
+          for arch in "${archs2[@]}"; do
+            download_and_convert "$arch"
           done
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
+
+          awk '!/^DOMAIN-REGEX,/' ./temp_fakeip.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
           keyword:stun
           keyword:time
           EOF
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+          awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' ./temp_fakeip.list | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
+          
           go run ./ --datapath=./mydata/ --outputname geosite.dat
 
           rm -f ./mydata/ads ./mydata/fakeip-filter
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
+          
+          awk '!/^DOMAIN-REGEX,/' ./temp_fakeip_lite.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
           keyword:ntp
           keyword:time
@@ -102,11 +123,13 @@ jobs:
           go run ./ --datapath=./mydata/ --outputname geosite-lite.dat
 
           rm -f ./mydata/*
-          for arch3 in "${archs3[@]}"; do
-            curl -sSL "${domains_download_url}/${arch3}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${arch3}"
+          for arch in "${archs3[@]}"; do
+            download_and_convert "$arch"
           done
           mv -f ./mydata/cn-lite ./mydata/cn
           go run ./ --datapath=./mydata/ --outputname geosite-mini.dat
+
+          rm -f ./temp_fakeip.list ./temp_fakeip_lite.list
 
       - name: Generate 'sing-box' geodata
         run: |
@@ -119,21 +142,20 @@ jobs:
       - name: Get geoip relative files
         run: |
           mkdir -p ./mihomo-geodata/ ./sing-box-geodata/
-          mihomo_mmdb=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '.mmdb' | awk -F '"' '{print $4}'))
-          count_mihomo_mmdb=${#mihomo_mmdb[@]}
-          for ((i = 0; i < count_mihomo_mmdb; i++)); do
-            wget -P ./mihomo-geodata/ "${mihomo_mmdb[i]}"
+          
+          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '.mmdb' | awk -F '"' '{print $4}' | while read url; do
+            wget -q -P ./mihomo-geodata/ "$url" &
           done
-          mihomo_others=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/mihomo-geodata/' | grep -v '.mmdb' | awk -F '"' '{print $4}'))
-          count_mihomo_others=${#mihomo_others[@]}
-          for ((i = 0; i < count_mihomo_others; i++)); do
-            wget -P ./community/ "${mihomo_others[i]}"
+
+          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/mihomo-geodata/' | grep -v '.mmdb' | awk -F '"' '{print $4}' | while read url; do
+             wget -q -P ./community/ "$url" &
           done
-          singbox_all=($(curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/sing-box-geodata/' | awk -F '"' '{print $4}'))
-          count_singbox_all=${#singbox_all[@]}
-          for ((i = 0; i < count_singbox_all; i++)); do
-            wget -P ./community/ "${singbox_all[i]}"
+
+          curl -sSL https://api.github.com/repos/DustinWin/geoip/releases | grep '"browser_download_url"' | grep '/sing-box-geodata/' | awk -F '"' '{print $4}' | while read url; do
+             wget -q -P ./community/ "$url" &
           done
+          
+          wait
 
       - name: Move 'mihomo' and 'sing-box' geodata files
         run: |
@@ -148,84 +170,71 @@ jobs:
 
       - name: Download 'mihomo' rule-set files
         run: |
+          set -e
           mkdir -p ./mihomo-ruleset/
           domains=(ads private trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
+          
+          process_domain() {
+             local dom=$1
+             local dir="./tools/domains/${dom}"
+             mkdir -p "$dir"
 
-          for domain in "${domains[@]}"; do
-            mkdir -p "./tools/domains/${domain}/"
-            curl -sSL "${domains_download_url}/${domain}.list" | \
+             curl -sSL "${domains_download_url}/${dom}.list" | \
               grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
               sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
-              > "./tools/domains/${domain}/${domain}.list"
-            if [ ! -s "./tools/domains/${domain}/${domain}.list" ]; then
-               echo "Warning: Filtered list for ${domain} is empty. Removing."
-               rm -f "./tools/domains/${domain}/${domain}.list"
-               rmdir --ignore-fail-on-non-empty "./tools/domains/${domain}/"
-            fi
+              > "${dir}/${dom}.list"
+             
+             if [ ! -s "${dir}/${dom}.list" ]; then
+               rm -f "${dir}/${dom}.list"
+               rmdir --ignore-fail-on-non-empty "$dir"
+             fi
+          }
+
+          for domain in "${domains[@]}"; do
+            process_domain "$domain"
           done
 
-          mkdir -p ./tools/domains/fakeip-filter/
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | \
-            grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
-            sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
-            > "./tools/domains/fakeip-filter/fakeip-filter.list"
-          if [ ! -s "./tools/domains/fakeip-filter/fakeip-filter.list" ]; then
-             echo "Warning: Filtered list for fakeip-filter is empty. Removing."
-             rm -f "./tools/domains/fakeip-filter/fakeip-filter.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter/"
-          fi
+          for type in fakeip-filter fakeip-filter-lite; do
+             mkdir -p "./tools/domains/${type}/"
+             curl -sSL "${domains_download_url}/${type}.list" | \
+               grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+               sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+               > "./tools/domains/${type}/${type}.list"
+             if [ ! -s "./tools/domains/${type}/${type}.list" ]; then
+               rm -f "./tools/domains/${type}/${type}.list"
+               rmdir --ignore-fail-on-non-empty "./tools/domains/${type}/"
+             fi
+          done
 
-          mkdir -p ./tools/domains/fakeip-filter-lite/
-            curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | \
-             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
-             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
-             > "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
-          if [ ! -s "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list" ]; then
-             echo "Warning: Filtered list for fakeip-filter-lite is empty. Removing."
-             rm -f "./tools/domains/fakeip-filter-lite/fakeip-filter-lite.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/fakeip-filter-lite/"
-          fi
-
-            mkdir -p ./tools/domains/private/
-            curl -sSL "${domains_download_url}/private.list" | \
-             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
-             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
-             > "./tools/domains/private/private.list"
-          if [ ! -s "./tools/domains/private/private.list" ]; then
-             echo "Warning: Filtered list for private is empty. Removing."
-             rm -f "./tools/domains/private/private.list"
-             rmdir --ignore-fail-on-non-empty "./tools/domains/private/"
-          fi
+          process_domain "private"
 
           curl -sSL "${domains_download_url}/applications.list" > ./mihomo-ruleset/applications.list
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
-            download_source_url=""
+            local dl_url=""
             if [[ "$ip" == "adsip" ]]; then
-              download_source_url="${domains_download_url}/${ip}.list"
+              dl_url="${domains_download_url}/${ip}.list"
             else
-              download_source_url="${ips_download_url}/${ip}.list"
+              dl_url="${ips_download_url}/${ip}.list"
             fi
 
-            curl -sSL "${download_source_url}" | \
+            curl -sSL "${dl_url}" | \
               grep -E '^(IP-CIDR,|IP-CIDR6,)' | \
               sed 's/^IP-CIDR,\|^IP-CIDR6,//' \
               > "./tools/ips/${ip}/${ip}.list"
             
-              if [ ! -s "./tools/ips/${ip}/${ip}.list" ]; then
-                echo "Warning: Filtered list for ${ip} is empty. Removing."
+             if [ ! -s "./tools/ips/${ip}/${ip}.list" ]; then
                 rm -f "./tools/ips/${ip}/${ip}.list"
                 rmdir --ignore-fail-on-non-empty "./tools/ips/${ip}/"
-              fi
+             fi
           done
-
           rm -rf ./tmp/
 
       - name: Download 'sing-box' rule_set files
         run: |
-          mkdir -p ./tmp/ # Ensure tmp directory exists
+          mkdir -p ./tmp/
           domains=(ads private trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
 
@@ -235,44 +244,42 @@ jobs:
           done
 
           mkdir -p ./tools/rules/fakeip-filter/
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '!/^DOMAIN-REGEX,/' > ./tmp/temp-fakeip-filter-rules.txt
-          cat <<EOF >> ./tmp/temp-fakeip-filter-rules.txt
-          DOMAIN-KEYWORD,ntp
-          DOMAIN-KEYWORD,stun
-          DOMAIN-KEYWORD,time
-          EOF
-          curl -sSL "${domains_download_url}/fakeip-filter.list" | awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' >> ./tmp/temp-fakeip-filter-rules.txt
-          sort --ignore-case ./tmp/temp-fakeip-filter-rules.txt > ./tools/rules/fakeip-filter/fakeip-filter.list
+          curl -sSL "${domains_download_url}/fakeip-filter.list" > ./tmp/temp-fakeip.txt
+          {
+             awk '!/^DOMAIN-REGEX,/' ./tmp/temp-fakeip.txt
+             echo "DOMAIN-KEYWORD,ntp"
+             echo "DOMAIN-KEYWORD,stun"
+             echo "DOMAIN-KEYWORD,time"
+             awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' ./tmp/temp-fakeip.txt
+          } | sort --ignore-case > ./tools/rules/fakeip-filter/fakeip-filter.list
 
           mkdir -p ./tools/rules/fakeip-filter-lite/
-          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" | awk '!/^DOMAIN-REGEX,/' > ./tmp/temp-fakeip-filter-lite-rules.txt
-          cat <<EOF >> ./tmp/temp-fakeip-filter-lite-rules.txt
-          DOMAIN-KEYWORD,ntp
-          DOMAIN-KEYWORD,stun
-          DOMAIN-KEYWORD,time
-          EOF
-          sort --ignore-case ./tmp/temp-fakeip-filter-lite-rules.txt > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
+          curl -sSL "${domains_download_url}/fakeip-filter-lite.list" > ./tmp/temp-fakeip-lite.txt
+          {
+             awk '!/^DOMAIN-REGEX,/' ./tmp/temp-fakeip-lite.txt
+             echo "DOMAIN-KEYWORD,ntp"
+             echo "DOMAIN-KEYWORD,stun"
+             echo "DOMAIN-KEYWORD,time"
+          } | sort --ignore-case > ./tools/rules/fakeip-filter-lite/fakeip-filter-lite.list
 
           mkdir -p ./tools/rules/applications/
           curl -sSL "${domains_download_url}/applications.list" > "./tools/rules/applications/applications.list"
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
-            download_source_url=""
+            local dl_url=""
             if [[ "$ip" == "adsip" ]]; then
-              download_source_url="${domains_download_url}/${ip}.list"
+              dl_url="${domains_download_url}/${ip}.list"
             else
-              download_source_url="${ips_download_url}/${ip}.list"
+              dl_url="${ips_download_url}/${ip}.list"
             fi
-            curl -sSL "${download_source_url}" > "./tools/rules/${ip}/${ip}.list"
+            curl -sSL "${dl_url}" > "./tools/rules/${ip}/${ip}.list"
           done
-
           rm -rf ./tmp*
 
       - name: Generate 'mihomo' rule-set (yaml)
         run: |
           set -eo pipefail
-
           domains=(trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare binance douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip)
 
@@ -281,18 +288,19 @@ jobs:
             local download_url=$2
             local output_file="./mihomo-ruleset/${item_name}.yaml"
             echo "Generating YAML ruleset for: ${item_name}"
+            
             local content
             content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
-            local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
-            count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
-            count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
-            count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
-            count_ipcidr=$(echo "${content}" | grep -c '^IP-CIDR' || true)
-            count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
-            count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
-            total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
-            local name
-            name=$(echo "${item_name}" | sed -e "s/^\(.\)/\U\1/")
+            
+            local count_domain=$(grep -c '^DOMAIN,' <<< "$content" || true)
+            local count_keyword=$(grep -c '^DOMAIN-KEYWORD,' <<< "$content" || true)
+            local count_suffix=$(grep -c '^DOMAIN-SUFFIX,' <<< "$content" || true)
+            local count_ipcidr=$(grep -c '^IP-CIDR' <<< "$content" || true)
+            local count_process=$(grep -c '^PROCESS-NAME,' <<< "$content" || true)
+            local count_regex=$(grep -c '^DOMAIN-REGEX,' <<< "$content" || true)
+            local total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+            
+            local name=$(echo "${item_name}" | sed -e "s/^\(.\)/\U\1/")
             {
               echo "# NAME: ${name}"
               echo "# AUTHOR: Yat-Muk"
@@ -307,6 +315,7 @@ jobs:
               echo "# TOTAL: ${total}"
               echo "payload:"
             } > "${output_file}"
+            
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
@@ -314,20 +323,20 @@ jobs:
 
           generate_merged_ads_ruleset() {
             echo "Generating MERGED YAML ruleset for: ads"
-            local item_name="ads"
-            local output_file="./mihomo-ruleset/${item_name}.yaml"
-            local content_domain content_ip content
-            content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
-            content_ip=$(curl -sSL "${domains_download_url}/adsip.list" | grep -E '^(IP-CIDR,|IP-CIDR6,)' || true)
-            content=$(echo -e "${content_domain}\n${content_ip}" | grep . || true)
-            local count_domain count_keyword count_suffix count_ipcidr count_process count_regex total
-            count_domain=$(echo "${content}" | grep -c '^DOMAIN,' || true)
-            count_keyword=$(echo "${content}" | grep -c '^DOMAIN-KEYWORD,' || true)
-            count_suffix=$(echo "${content}" | grep -c '^DOMAIN-SUFFIX,' || true)
-            count_ipcidr=$(echo "${content}" | grep -c -E '^IP-CIDR' || true)
-            count_process=$(echo "${content}" | grep -c '^PROCESS-NAME,' || true)
-            count_regex=$(echo "${content}" | grep -c '^DOMAIN-REGEX,' || true)
-            total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+            local output_file="./mihomo-ruleset/ads.yaml"
+            local content_domain=$(curl -sSL "${domains_download_url}/ads.list" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
+            local content_ip=$(curl -sSL "${domains_download_url}/adsip.list" | grep -E '^(IP-CIDR,|IP-CIDR6,)' || true)
+            local content
+            content=$(echo -e "${content_domain}\n${content_ip}" | grep .)
+            
+            local count_domain=$(grep -c '^DOMAIN,' <<< "$content" || true)
+            local count_keyword=$(grep -c '^DOMAIN-KEYWORD,' <<< "$content" || true)
+            local count_suffix=$(grep -c '^DOMAIN-SUFFIX,' <<< "$content" || true)
+            local count_ipcidr=$(grep -c -E '^IP-CIDR' <<< "$content" || true)
+            local count_process=$(grep -c '^PROCESS-NAME,' <<< "$content" || true)
+            local count_regex=$(grep -c '^DOMAIN-REGEX,' <<< "$content" || true)
+            local total=$((count_domain + count_keyword + count_suffix + count_ipcidr + count_process + count_regex))
+            
             {
               echo "# NAME: Ads"
               echo "# AUTHOR: Yat-Muk"
@@ -342,6 +351,7 @@ jobs:
               echo "# TOTAL: ${total}"
               echo "payload:"
             } > "${output_file}"
+            
             if [ -n "${content}" ]; then
               echo "${content}" | sort | sed 's/^/  - /' >> "${output_file}"
             fi
@@ -354,7 +364,7 @@ jobs:
           generate_yaml_ruleset "fakeip-filter" "${domains_download_url}/fakeip-filter.list"
           generate_yaml_ruleset "fakeip-filter-lite" "${domains_download_url}/fakeip-filter-lite.list"
           for item in "${ips[@]}"; do
-              if [[ "$item" != "adsip" ]]; then # adsip is handled by merge function
+              if [[ "$item" != "adsip" ]]; then
                 generate_yaml_ruleset "${item}" "${ips_download_url}/${item}.list"
               fi
           done
@@ -367,35 +377,48 @@ jobs:
           cd ./tools/
           chmod +x ./mihomo
 
-          domain_files=($(find ./domains/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
-          for file_path in "${domain_files[@]}"; do
+          find ./domains/ -maxdepth 2 -name '*.list' -type f | while read file_path; do
               dir_name=$(basename $(dirname "$file_path"))
               if [ -s "$file_path" ]; then
-                echo "Converting domain ruleset: ${dir_name}"
                 ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
-              else
-                echo "Skipping empty domain list file: $file_path"
               fi
               mv -f "$file_path" ../mihomo-ruleset/
           done
 
-          ip_files=($(find ./ips/ -maxdepth 2 -name '*.list' -type f 2>/dev/null))
-            for file_path in "${ip_files[@]}"; do
+          find ./ips/ -maxdepth 2 -name '*.list' -type f | while read file_path; do
               dir_name=$(basename $(dirname "$file_path"))
               if [ -s "$file_path" ]; then
-                echo "Converting ipcidr ruleset: ${dir_name}"
                 ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
-              else
-                echo "Skipping empty ip list file: $file_path"
               fi
               mv -f "$file_path" ../mihomo-ruleset/
-            done
+          done
 
-          find ./domains/ ./ips/ -maxdepth 1 -mindepth 1 -type d -empty -delete 2>/dev/null
           rm -rf ./mihomo* ./domains/ ./ips/
 
       - name: Generate 'sing-box' rule_set (srs) and move .json files
         run: |
+          process_singbox() {
+             local version=$1
+             local rules_version=$2
+             local target_dir=$3
+             
+             curl -L "https://github.com/SagerNet/sing-box/releases/download/v${version}/sing-box-${version}-linux-amd64.tar.gz" | tar -zx -C ./tools/
+             mv -f "./tools/sing-box-${version}-linux-amd64/sing-box" ./tools/sing-box
+             mkdir -p "$target_dir"
+             
+             cd ./tools/
+             if [[ -f "./convert.sh" ]]; then
+               sed -i "s/\"version\": [0-9]\+/\"version\": ${rules_version}/" ./convert.sh
+               chmod +x ./convert.sh && ./convert.sh
+               mv -f ./*.json ./*.srs "../${target_dir}/"
+             else
+               echo "Error: convert.sh not found"
+               exit 1
+             fi
+             rm -rf ./sing-box*
+             cd ..
+          }
+
           if [[ "${{ env.singbox_core_last1_version }}" == "${{ env.singbox_core_release_version }}" ]]; then
             echo "singbox_core_old_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last1_version }}" >> $GITHUB_ENV
@@ -403,35 +426,8 @@ jobs:
             echo "singbox_ruleset_new_version=${{ env.singbox_rules_last1_version }}" >> $GITHUB_ENV
             echo "singbox_equal=true" >> $GITHUB_ENV
 
-            curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last2_version }}/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
-            mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
-            mkdir -p ./sing-box-ruleset-compatible/
-            cd ./tools/
-            # Assuming convert.sh exists and works as intended
-            if [[ -f "./convert.sh" ]]; then
-              sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-              chmod +x ./convert.sh && ./convert.sh
-              mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
-            else
-              echo "Error: convert.sh not found in ./tools/"
-              exit 1
-            fi
-            rm -rf ./sing-box*
-
-            cd ../
-            curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last1_version }}/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
-            mv -f "./tools/sing-box-${{ env.singbox_core_last1_version }}-linux-amd64/sing-box" ./tools/sing-box
-            mkdir -p ./sing-box-ruleset/
-            cd ./tools/
-              if [[ -f "./convert.sh" ]]; then
-               sed -i 's/"version": ${{ env.singbox_rules_last2_version }}/"version": ${{ env.singbox_rules_last1_version }}/' ./convert.sh
-               chmod +x ./convert.sh && ./convert.sh
-               mv -f ./*.json ./*.srs ../sing-box-ruleset/
-              else
-               echo "Error: convert.sh not found in ./tools/"
-               exit 1
-              fi
-            rm -rf ./sing-box* ./rules*
+            process_singbox "${{ env.singbox_core_last2_version }}" "${{ env.singbox_rules_last2_version }}" "sing-box-ruleset-compatible"
+            process_singbox "${{ env.singbox_core_last1_version }}" "${{ env.singbox_rules_last1_version }}" "sing-box-ruleset"
           else
             echo "singbox_core_old_version=${{ env.singbox_core_last3_version }}" >> $GITHUB_ENV
             echo "singbox_core_new_version=${{ env.singbox_core_last2_version }}" >> $GITHUB_ENV
@@ -439,35 +435,11 @@ jobs:
             echo "singbox_ruleset_new_version=${{ env.singbox_rules_last2_version }}" >> $GITHUB_ENV
             echo "singbox_equal=false" >> $GITHUB_ENV
 
-            wget "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last3_version }}/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64.tar.gz" -O - | tar -zxf - -C ./tools/
-            mv -f "./tools/sing-box-${{ env.singbox_core_last3_version }}-linux-amd64/sing-box" ./tools/sing-box
-            mkdir -p ./sing-box-ruleset-compatible/
-            cd ./tools/
-              if [[ -f "./convert.sh" ]]; then
-               sed -i 's/"version": 1/"version": ${{ env.singbox_rules_last3_version }}/' ./convert.sh
-               chmod +x ./convert.sh && ./convert.sh
-               mv -f ./*.json ./*.srs ../sing-box-ruleset-compatible/
-              else
-                echo "Error: convert.sh not found in ./tools/"
-                exit 1
-              fi
-            rm -rf ./sing-box*
-
-            cd ../
-            curl -L "https://github.com/SagerNet/sing-box/releases/download/v${{ env.singbox_core_last2_version }}/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64.tar.gz" | tar -zx -C ./tools/
-            mv -f "./tools/sing-box-${{ env.singbox_core_last2_version }}-linux-amd64/sing-box" ./tools/sing-box
-            mkdir -p ./sing-box-ruleset/
-            cd ./tools/
-              if [[ -f "./convert.sh" ]]; then
-               sed -i 's/"version": ${{ env.singbox_rules_last3_version }}/"version": ${{ env.singbox_rules_last2_version }}/' ./convert.sh
-               chmod +x ./convert.sh && ./convert.sh
-               mv -f ./*.json ./*.srs ../sing-box-ruleset/
-              else
-                echo "Error: convert.sh not found in ./tools/"
-                exit 1
-              fi
-            rm -rf ./sing-box* ./rules*
+            process_singbox "${{ env.singbox_core_last3_version }}" "${{ env.singbox_rules_last3_version }}" "sing-box-ruleset-compatible"
+            process_singbox "${{ env.singbox_core_last2_version }}" "${{ env.singbox_rules_last2_version }}" "sing-box-ruleset"
           fi
+          
+          rm -rf ./tools/rules*
 
       - name: Release and upload 'mihomo-geodata' assets
         uses: svenstaro/upload-release-action@v2
@@ -610,16 +582,25 @@ jobs:
 
       - name: Purge jsDelivr CDN
         run: |
-          cd ./mihomo-geodata/ || exit 1
-          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-geodata/${file}"; done
-          cd ../sing-box-geodata/ || exit 1
-          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-geodata/${file}"; done
-          cd ../mihomo-ruleset/ || exit 1
-          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@mihomo-ruleset/${file}"; done
-          cd ../sing-box-ruleset-compatible/ || exit 1
-          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset-compatible/${file}"; done
-          cd ../sing-box-ruleset/ || exit 1
-          for file in $(ls); do curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing-box-ruleset/${file}"; done
+          purge_urls=(
+            "mihomo-geodata"
+            "sing-box-geodata"
+            "mihomo-ruleset"
+            "sing-box-ruleset-compatible"
+            "sing-box-ruleset"
+          )
+          
+          for repo in "${purge_urls[@]}"; do
+             if [ -d "./${repo}/" ]; then
+                cd "./${repo}/" || continue
+                for file in *; do
+                   if [ -f "$file" ]; then
+                     curl -i -s "https://purge.jsdelivr.net/gh/${{ github.repository }}@${repo}/${file}" > /dev/null
+                   fi
+                done
+                cd ..
+             fi
+          done
 
       - name: Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
