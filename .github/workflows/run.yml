@@ -21,11 +21,15 @@ jobs:
           echo "update_time=$(date -d '+8 hours' +'%Y-%m-%d %H:%M:%S')" >> ${GITHUB_ENV}
           echo "domains_download_url=https://raw.githubusercontent.com/Yat-Muk/domain-list-custom/domains" >> ${GITHUB_ENV}
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
+
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
+          
           echo "singbox_core_release_version=$(curl -sSL https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' | sed -E 's/([0-9]+)$/0/')" >> ${GITHUB_ENV}
+          
           echo "singbox_core_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_core_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_core_last3_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' sb_doc.html | sed -n 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
+          
           echo "singbox_rules_last1_version=$(awk '/<li>/ {last=$0} END {print last}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_rules_last2_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-1]}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
           echo "singbox_rules_last3_version=$(awk '/<li>/{lines[++count]=$0} END{print lines[count-2]}' sb_doc.html | sed -n 's/^<li>\([0-9]\+\).*/\1/p')" >> ${GITHUB_ENV}
@@ -75,13 +79,11 @@ jobs:
           curl -sSL "${domains_download_url}/fakeip-filter.list" > ./temp_fakeip.list
           
           awk '!/^DOMAIN-REGEX,/' ./temp_fakeip.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
-
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
           keyword:stun
           keyword:time
           EOF
-
           awk '/^DOMAIN-REGEX,/ && !/ntp|stun|time/' ./temp_fakeip.list | sed 's/DOMAIN-REGEX,/regexp:/' >> ./mydata/fakeip-filter
           
           go run ./ --datapath=./mydata/ --outputname geosite-all.dat
@@ -101,7 +103,7 @@ jobs:
           for arch in "${archs2[@]}"; do
             download_and_convert "$arch"
           done
-
+          
           awk '!/^DOMAIN-REGEX,/' ./temp_fakeip.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter
           cat <<EOF >> ./mydata/fakeip-filter
           keyword:ntp
@@ -113,7 +115,6 @@ jobs:
           go run ./ --datapath=./mydata/ --outputname geosite.dat
 
           rm -f ./mydata/ads ./mydata/fakeip-filter
-          
           awk '!/^DOMAIN-REGEX,/' ./temp_fakeip_lite.list | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' > ./mydata/fakeip-filter-lite
           cat <<EOF >> ./mydata/fakeip-filter-lite
           keyword:ntp
@@ -174,12 +175,11 @@ jobs:
           mkdir -p ./mihomo-ruleset/
           domains=(ads private trackerslist microsoft-cn apple-cn google-cn games-cn netflix disney max primevideo appletv applenews applemusic apple_classical google youtube tiktok bilibili spotify media games ai networktest tld-proxy gfw proxy cn cn-lite adobe hulu telegram youtubemusic twitter truthSocial github gitlab cloudflare douyin duolingo facebook instagram shopee wechat binance)
           ips=(netflixip mediaip gamesip privateip cnip telegramip adsip)
-          
+
           process_domain() {
              local dom=$1
              local dir="./tools/domains/${dom}"
              mkdir -p "$dir"
-
              curl -sSL "${domains_download_url}/${dom}.list" | \
               grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
               sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
@@ -213,7 +213,7 @@ jobs:
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/ips/${ip}/"
-            local dl_url=""
+            dl_url=""
             if [[ "$ip" == "adsip" ]]; then
               dl_url="${domains_download_url}/${ip}.list"
             else
@@ -267,7 +267,7 @@ jobs:
 
           for ip in "${ips[@]}"; do
             mkdir -p "./tools/rules/${ip}/"
-            local dl_url=""
+            dl_url=""
             if [[ "$ip" == "adsip" ]]; then
               dl_url="${domains_download_url}/${ip}.list"
             else
