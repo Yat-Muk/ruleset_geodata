@@ -24,7 +24,9 @@ jobs:
           echo "domains_download_url=https://raw.githubusercontent.com/Yat-Muk/domain-list-custom/domains" >> ${GITHUB_ENV}
           echo "ips_download_url=https://raw.githubusercontent.com/Yat-Muk/geoip/ips" >> ${GITHUB_ENV}
 
+          # =======================================================
           # [配置區域] AdGuard DNS Filter 源管理 (Sing-box >= 1.10.0)
+          # =======================================================
           {
             echo "ADGUARD_SOURCES_CONFIG<<EOF"
             echo "adguard-dns|https://filters.adtidy.org/android/filters/15_optimized.txt"
@@ -32,6 +34,7 @@ jobs:
             echo "adguard-cn|https://filters.adtidy.org/android/filters/224_optimized.txt"
             echo "EOF"
           } >> "$GITHUB_ENV"
+          # =======================================================
 
           curl -sSL https://raw.githubusercontent.com/SagerNet/sing-box/docs/configuration/rule-set/source-format/index.html > sb_doc.html
           
@@ -419,54 +422,43 @@ jobs:
              # 下載 sing-box
              curl -L "https://github.com/SagerNet/sing-box/releases/download/v${version}/sing-box-${version}-linux-amd64.tar.gz" | tar -zx -C ./tools/
              mv -f "./tools/sing-box-${version}-linux-amd64/sing-box" ./tools/sing-box
+             chmod +x ./sing-box
              mkdir -p "$target_dir"
              
              cd ./tools/
              
-             # ================= [AdGuard 編譯邏輯 (Safe Mode)] =================
-             # 1. 版本檢查
+             # ================= [AdGuard 編譯邏輯 (Convert Mode)] =================
+             # 1. 版本檢查 (Sing-box >= 1.10.0 支持 AdGuard 格式轉換)
              local ver_major=$(echo "$version" | cut -d. -f1)
              local ver_minor=$(echo "$version" | cut -d. -f2)
              
              if [[ "$ver_major" -gt 1 ]] || [[ "$ver_major" -eq 1 && "$ver_minor" -ge 10 ]]; then
-                 echo "Sing-box version ${version} >= 1.10.0. Processing AdGuard sources..."
+                 echo "Sing-box version ${version} >= 1.10.0. Starting AdGuard conversion..."
                  
                  # 2. 讀取配置
                  readarray -t RAW_SOURCES <<< "$ADGUARD_SOURCES_CONFIG"
                  
-                 ADGUARD_SRC_LIST=()
+                 # 3. 下載並合併文件
+                 > all_adguard.txt  # 清空或創建臨時文件
+                 has_source=false
+                 
                  for line in "${RAW_SOURCES[@]}"; do
                     line=$(echo "$line" | sed 's/^[ \t]*//;s/[ \t]*$//')
+                    # 過濾空行和註釋
                     if [[ -n "$line" && "$line" != \#* ]]; then
-                        ADGUARD_SRC_LIST+=("$line")
+                        url="${line##*|}"
+                        tag="${line%%|*}"
+                        echo "Downloading AdGuard source: $tag ($url)"
+                        curl -sSL "$url" >> all_adguard.txt
+                        echo "" >> all_adguard.txt # 確保每個文件末尾有換行符，防止合併出錯
+                        has_source=true
                     fi
                  done
                  
-                 if [ ${#ADGUARD_SRC_LIST[@]} -gt 0 ]; then
-                     # 初始化文件
-                     echo '{ "output": "adguard.srs", "rule_set": [' > adguard_config.json
-                     
-                     is_first=true
-                     for item in "${ADGUARD_SRC_LIST[@]}"; do
-                       tag="${item%%|*}"
-                       url="${item##*|}"
-                       
-                       # 處理逗號
-                       if [ "$is_first" = true ]; then
-                           is_first=false
-                       else
-                           echo "," >> adguard_config.json
-                       fi
-                       
-                       # 單行寫入，安全可靠
-                       printf '    { "tag": "%s", "type": "remote", "format": "adguard", "url": "%s", "download_detour": "direct" }' "$tag" "$url" >> adguard_config.json
-                     done
-                     
-                     # 封閉 JSON
-                     echo ' ] }' >> adguard_config.json
-                     
-                     # 4. 執行編譯
-                     ./sing-box rule-set compile --config adguard_config.json || echo "AdGuard compilation failed"
+                 if [ "$has_source" = true ]; then
+                     # 4. 執行轉換命令
+                     echo "Converting merged AdGuard list to SRS..."
+                     ./sing-box rule-set convert --type adguard --output adguard.srs all_adguard.txt || echo "AdGuard conversion failed"
                  else
                      echo "No active AdGuard sources found."
                  fi
@@ -478,6 +470,7 @@ jobs:
              if [[ -f "./convert.sh" ]]; then
                sed -i "s/\"version\": [0-9]\+/\"version\": ${rules_version}/" ./convert.sh
                chmod +x ./convert.sh && ./convert.sh
+               # 移動所有生成的 .srs 文件 (包括 adguard.srs)
                mv -f ./*.json ./*.srs "../${target_dir}/"
              else
                echo "Error: convert.sh not found"
