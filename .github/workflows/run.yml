@@ -97,7 +97,9 @@ jobs:
           cd ./community/
 
           download_and_convert() {
-            curl -sSL "${domains_download_url}/${1}.list" | sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' > "./mydata/${1}"
+            curl -sSL "${domains_download_url}/${1}.list" | \
+            sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' | \
+            sed '/_vmind\.qqvideo\.tc\.qq\.com/d' > "./mydata/${1}"
           }
 
           for arch in "${archs1[@]}"; do
