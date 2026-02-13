@@ -410,29 +410,50 @@ jobs:
         run: |
           mkdir -p ./tools/
           
-          # 1. 下載 mihomo
-          echo "Downloading mihomo core..."
-          curl -L -o ./tools/mihomo.tar.gz https://github.com/DustinWin/proxy-tools/releases/download/mihomo/mihomo-meta-linux-amd64v3.tar.gz
+          # =======================================================
+          # 官方 MetaCubeX 倉庫下載 (更穩定、更安全)
+          # =======================================================
+          echo "Fetching latest mihomo version from MetaCubeX..."
           
-          # 2. 檢查文件格式 (防止抓到 404 文本)
-          if ! file ./tools/mihomo.tar.gz | grep -q "gzip compressed data"; then
-              echo "Error: Mihomo download failed (not a gzip). Checking content:"
-              cat ./tools/mihomo.tar.gz
+          # 1. 獲取最新 Release Tag
+          MIHOMO_TAG=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | jq -r '.tag_name')
+          
+          # 2. 獲取失敗時的保底版本 (Fallback)
+          if [[ -z "$MIHOMO_TAG" || "$MIHOMO_TAG" == "null" ]]; then
+              echo "WARNING: Failed to fetch latest version. Using fallback: v1.19.3"
+              MIHOMO_TAG="v1.19.3"
+          fi
+          
+          echo "Target Mihomo Version: ${MIHOMO_TAG}"
+          
+          # 3. 構建官方下載鏈接 (注意：官方是 .gz 格式)
+          # 格式範例: mihomo-linux-amd64-v1.19.3.gz
+          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_TAG}/mihomo-linux-amd64-${MIHOMO_TAG}.gz"
+          
+          echo "Downloading from: $DOWNLOAD_URL"
+          curl -L -o ./tools/mihomo.gz "$DOWNLOAD_URL"
+          
+          # 4. 檢查文件有效性 (防止 404 或 API 限制)
+          if ! file ./tools/mihomo.gz | grep -q "gzip compressed data"; then
+              echo "Error: Downloaded file is not a valid gzip. Content:"
+              head -n 5 ./tools/mihomo.gz
               exit 1
           fi
 
-          # 3. 解壓
-          tar -zxvf ./tools/mihomo.tar.gz -C ./tools/
+          # 5. 解壓 (使用 gzip -d，因為不是 tar 包)
+          gzip -d ./tools/mihomo.gz
           
-          # 4. 靈活處理二進制文件名
-          if [ -f "./tools/CrashCore" ]; then
-              mv -f ./tools/CrashCore ./tools/mihomo
-          elif [ -f "./tools/mihomo-linux-amd64v3" ]; then
-              mv -f ./tools/mihomo-linux-amd64v3 ./tools/mihomo
-          fi
-          
+          # 6. 賦予權限
           chmod +x ./tools/mihomo
+          
+          # 7. 簡單驗證
+          ./tools/mihomo -v
+          
+          # =======================================================
+          
           cd ./tools/
+          
+          mkdir -p ../mihomo-ruleset
 
           find ./domains/ -maxdepth 2 -name '*.list' -type f | while read file_path; do
               dir_name=$(basename $(dirname "$file_path"))
