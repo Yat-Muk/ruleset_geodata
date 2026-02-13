@@ -217,9 +217,9 @@ jobs:
              local dir="./tools/domains/${dom}"
              mkdir -p "$dir"
              curl -sSL "${domains_download_url}/${dom}.list" | \
-              grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
-              sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' -e 's/[] ,]*$//' \
-              > "${dir}/${dom}.list"
+             grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
+             sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' -e 's/[] ,]*$//' \
+             > "${dir}/${dom}.list"
              
              if [ ! -s "${dir}/${dom}.list" ]; then
                rm -f "${dir}/${dom}.list"
@@ -408,15 +408,36 @@ jobs:
 
       - name: Generate 'mihomo' rule-set (mrs) and move .list files
         run: |
-          curl -L https://github.com/DustinWin/proxy-tools/releases/download/mihomo/mihomo-meta-linux-amd64v3.tar.gz | tar -zx -C ./tools/
-          mv -f ./tools/CrashCore ./tools/mihomo
+          mkdir -p ./tools/
+          
+          # 1. 下載 mihomo
+          echo "Downloading mihomo core..."
+          curl -L -o ./tools/mihomo.tar.gz https://github.com/DustinWin/proxy-tools/releases/download/mihomo/mihomo-meta-linux-amd64v3.tar.gz
+          
+          # 2. 檢查文件格式 (防止抓到 404 文本)
+          if ! file ./tools/mihomo.tar.gz | grep -q "gzip compressed data"; then
+              echo "Error: Mihomo download failed (not a gzip). Checking content:"
+              cat ./tools/mihomo.tar.gz
+              exit 1
+          fi
+
+          # 3. 解壓
+          tar -zxvf ./tools/mihomo.tar.gz -C ./tools/
+          
+          # 4. 靈活處理二進制文件名
+          if [ -f "./tools/CrashCore" ]; then
+              mv -f ./tools/CrashCore ./tools/mihomo
+          elif [ -f "./tools/mihomo-linux-amd64v3" ]; then
+              mv -f ./tools/mihomo-linux-amd64v3 ./tools/mihomo
+          fi
+          
+          chmod +x ./tools/mihomo
           cd ./tools/
-          chmod +x ./mihomo
 
           find ./domains/ -maxdepth 2 -name '*.list' -type f | while read file_path; do
               dir_name=$(basename $(dirname "$file_path"))
               if [ -s "$file_path" ]; then
-                ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+                ./mihomo convert-ruleset domain text "$file_path" "../mihomo-ruleset/${dir_name}.mrs" || echo "Failed to convert $dir_name"
               fi
               mv -f "$file_path" ../mihomo-ruleset/
           done
@@ -424,7 +445,7 @@ jobs:
           find ./ips/ -maxdepth 2 -name '*.list' -type f | while read file_path; do
               dir_name=$(basename $(dirname "$file_path"))
               if [ -s "$file_path" ]; then
-                ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs"
+                ./mihomo convert-ruleset ipcidr text "$file_path" "../mihomo-ruleset/${dir_name}.mrs" || echo "Failed to convert $dir_name"
               fi
               mv -f "$file_path" ../mihomo-ruleset/
           done
@@ -460,7 +481,7 @@ jobs:
 
             # 3. 解壓文件
             tar -zxvf "./tools/singbox.tar.gz" -C ./tools/
-    
+            
             # 4. 尋找解壓出來的目錄（防止目錄名與 version 不完全一致）
             local extracted_dir=$(find ./tools -maxdepth 1 -type d -name "sing-box-*")
             if [[ -n "$extracted_dir" ]]; then
