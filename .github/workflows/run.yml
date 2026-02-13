@@ -42,12 +42,12 @@ jobs:
           echo "Fetching latest sing-box version..."
           TAG_NAME=$(curl -sSL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SagerNet/sing-box/releases/latest | jq -r '.tag_name' || echo "")
           
-          # 檢查獲取到的 TAG 是否有效 (是否包含 'v')
-          if [[ "$TAG_NAME" != v* ]]; then
-             echo "WARNING: GitHub API Rate Limit exceeded or API failed. Using Fallback Version."
-             # 使用指定的最新版本 v1.12.12 作為備用
-             TAG_NAME="v1.12.12" 
+          if [[ ! "$TAG_NAME" =~ ^v[0-9] ]]; then
+            echo "WARNING: GitHub API failed. Using Hardcoded Fallback."
+            TAG_NAME="v1.12.12" 
           fi
+          VERSION_ONLY=$(echo "$TAG_NAME" | sed 's/^v//')
+          echo "singbox_version_raw=$VERSION_ONLY" >> ${GITHUB_ENV}
           
           # 設置版本變量
           RELEASE_VERSION=$(echo "$TAG_NAME" | sed -E 's/([0-9]+)$/0/')
@@ -434,17 +434,49 @@ jobs:
       - name: Generate 'sing-box' rule_set (srs) and move .json files
         run: |
           process_singbox() {
-             local version=$1
-             local rules_version=$2
-             local target_dir=$3
-             
-             # 下載 sing-box
-             curl -L "https://github.com/SagerNet/sing-box/releases/download/v${version}/sing-box-${version}-linux-amd64.tar.gz" | tar -zx -C ./tools/
-             mv -f "./tools/sing-box-${version}-linux-amd64/sing-box" ./tools/sing-box
-             mkdir -p "$target_dir"
-             
-             cd ./tools/
-             chmod +x ./sing-box
+            local version=$1
+            local rules_version=$2
+            local target_dir=$3
+
+            # 確保版本號不為空，否則直接退出防止後續錯誤
+            if [[ -z "$version" ]]; then
+                echo "Error: sing-box version is empty!"
+                exit 1
+            fi
+
+            echo "Processing sing-box v${version}..."
+
+            # 1. 下載到臨時文件，避免直接使用 Pipe 以便檢查
+            local download_url="https://github.com/SagerNet/sing-box/releases/download/v${version}/sing-box-${version}-linux-amd64.tar.gz"
+            curl -L -o "./tools/singbox.tar.gz" "$download_url"
+
+            # 2. 檢查下載的文件是否為有效的 gzip 格式
+            if ! file "./tools/singbox.tar.gz" | grep -q "gzip compressed data"; then
+                echo "Error: Downloaded file is not a valid gzip. Check version: ${version}"
+                echo "Content of downloaded file:"
+                head -n 5 "./tools/singbox.tar.gz"
+                exit 1
+            fi
+
+            # 3. 解壓文件
+            tar -zxvf "./tools/singbox.tar.gz" -C ./tools/
+    
+            # 4. 尋找解壓出來的目錄（防止目錄名與 version 不完全一致）
+            local extracted_dir=$(find ./tools -maxdepth 1 -type d -name "sing-box-*")
+            if [[ -n "$extracted_dir" ]]; then
+                mv -f "${extracted_dir}/sing-box" ./tools/sing-box
+                rm -rf "$extracted_dir"
+            else
+                echo "Error: Could not find extracted sing-box directory"
+                exit 1
+            fi
+
+            rm -f "./tools/singbox.tar.gz"
+            mkdir -p "$target_dir"
+
+            # 5. 進入目錄準備後續操作
+            cd ./tools/ || exit 1
+            chmod +x ./sing-box
              
              # ================= [AdGuard 編譯邏輯 (Convert Mode)] =================
              # 1. 版本檢查
