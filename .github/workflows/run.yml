@@ -98,7 +98,8 @@ jobs:
 
           download_and_convert() {
             curl -sSL "${domains_download_url}/${1}.list" | \
-            sed -e 's/DOMAIN,/full:/' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' | \
+            sed -e 's/DOMAIN,//' -e 's/DOMAIN-SUFFIX,//' -e 's/DOMAIN-KEYWORD,/keyword:/' -e 's/DOMAIN-REGEX,/regexp:/' | \
+            sed -e 's/[] ,]*$//' | \
             sed -e '/_vmind\.qqvideo\.tc\.qq\.com/d' -e '/s3-ap-\*\.amazonaws\.com/d' > "./mydata/${1}"
           }
 
@@ -217,7 +218,7 @@ jobs:
              mkdir -p "$dir"
              curl -sSL "${domains_download_url}/${dom}.list" | \
               grep -E '^(DOMAIN,|DOMAIN-SUFFIX,)' | \
-              sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' \
+              sed -e 's/^DOMAIN,//' -e 's/^DOMAIN-SUFFIX,/\+\./' -e 's/[] ,]*$//' \
               > "${dir}/${dom}.list"
              
              if [ ! -s "${dir}/${dom}.list" ]; then
@@ -325,7 +326,7 @@ jobs:
             echo "Generating YAML ruleset for: ${item_name}"
             
             local content
-            content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' || true)
+            content=$(curl -sSL "${download_url}" | grep -E '^(DOMAIN|IP-CIDR|PROCESS-NAME|DOMAIN-KEYWORD|DOMAIN-SUFFIX|DOMAIN-REGEX)' | sed 's/[] ,]*$//' || true)
             
             local count_domain=$(grep -c '^DOMAIN,' <<< "$content" || true)
             local count_keyword=$(grep -c '^DOMAIN-KEYWORD,' <<< "$content" || true)
