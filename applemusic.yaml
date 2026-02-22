@@ -1,0 +1,22 @@
+# NAME: Applemusic
+# AUTHOR: Yat-Muk
+# REPO: https://github.com/Yat-Muk/ruleset_geodata
+# UPDATED: 2026-02-23 03:32:10
+# DOMAIN: 6
+# DOMAIN-KEYWORD: 0
+# DOMAIN-SUFFIX: 3
+# DOMAIN-REGEX: 0
+# IP-CIDR: 0
+# PROCESS-NAME: 1
+# TOTAL: 10
+payload:
+  - DOMAIN,aod-ssl.itunes.apple.com
+  - DOMAIN,aod.itunes.apple.com
+  - DOMAIN,audio-ssl.itunes.apple.com
+  - DOMAIN,audio.itunes.apple.com
+  - DOMAIN,mvod.itunes.apple.com
+  - DOMAIN,streamingaudio.itunes.apple.com
+  - DOMAIN-SUFFIX,applemusic.com
+  - DOMAIN-SUFFIX,blobstore.apple.com
+  - DOMAIN-SUFFIX,music.apple.com
+  - PROCESS-NAME,Music

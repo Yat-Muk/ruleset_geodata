@@ -1,0 +1,13 @@
+# NAME: Youtubemusic
+# AUTHOR: Yat-Muk
+# REPO: https://github.com/Yat-Muk/ruleset_geodata
+# UPDATED: 2026-02-23 03:32:10
+# DOMAIN: 1
+# DOMAIN-KEYWORD: 0
+# DOMAIN-SUFFIX: 0
+# DOMAIN-REGEX: 0
+# IP-CIDR: 0
+# PROCESS-NAME: 0
+# TOTAL: 1
+payload:
+  - DOMAIN,music.youtube.com

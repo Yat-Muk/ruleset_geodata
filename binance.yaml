@@ -1,0 +1,24 @@
+# NAME: Binance
+# AUTHOR: Yat-Muk
+# REPO: https://github.com/Yat-Muk/ruleset_geodata
+# UPDATED: 2026-02-23 03:32:10
+# DOMAIN: 0
+# DOMAIN-KEYWORD: 0
+# DOMAIN-SUFFIX: 12
+# DOMAIN-REGEX: 0
+# IP-CIDR: 0
+# PROCESS-NAME: 0
+# TOTAL: 12
+payload:
+  - DOMAIN-SUFFIX,appsflayer.com
+  - DOMAIN-SUFFIX,binance.cloud
+  - DOMAIN-SUFFIX,binance.com
+  - DOMAIN-SUFFIX,binance.me
+  - DOMAIN-SUFFIX,binancecnt.com
+  - DOMAIN-SUFFIX,binancefuture.com
+  - DOMAIN-SUFFIX,bnappzh.co
+  - DOMAIN-SUFFIX,bnbstatic.com
+  - DOMAIN-SUFFIX,bnbzh.ac
+  - DOMAIN-SUFFIX,bntrace.com
+  - DOMAIN-SUFFIX,saasexch.cc
+  - DOMAIN-SUFFIX,saasexch.com

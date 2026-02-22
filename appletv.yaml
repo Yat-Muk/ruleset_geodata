@@ -1,0 +1,19 @@
+# NAME: Appletv
+# AUTHOR: Yat-Muk
+# REPO: https://github.com/Yat-Muk/ruleset_geodata
+# UPDATED: 2026-02-23 03:32:10
+# DOMAIN: 6
+# DOMAIN-KEYWORD: 0
+# DOMAIN-SUFFIX: 1
+# DOMAIN-REGEX: 0
+# IP-CIDR: 0
+# PROCESS-NAME: 0
+# TOTAL: 7
+payload:
+  - DOMAIN,hls-amt.itunes.apple.com
+  - DOMAIN,hls.itunes.apple.com
+  - DOMAIN,np-edge.itunes.apple.com
+  - DOMAIN,play-edge.itunes.apple.com
+  - DOMAIN,tv.applemusic.com
+  - DOMAIN,uts-api.itunes.apple.com
+  - DOMAIN-SUFFIX,tv.apple.com
