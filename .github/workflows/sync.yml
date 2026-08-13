@@ -1,4 +1,4 @@
-name: Smart Upstream Sync
+name: Upstream Sync
 
 permissions:
   contents: write
@@ -9,38 +9,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync_except_workflows:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream repo
     runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
     steps:
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+
+      - name: Sync upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.3
         with:
-          fetch-depth: 0
+          upstream_sync_repo: Loyalsoldier/v2ray-rules-dat
+          upstream_sync_branch: master
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          test_mode: false
 
-      - name: Configure Git
+      - name: Sync check
+        if: failure()
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Add Upstream Remote (DustinWin)
-        run: |
-          git remote add upstream https://github.com/DustinWin/ruleset_geodata.git
-          git fetch upstream
-
-      - name: Sync Everything EXCEPT Workflows and README
-        run: |
-          echo "Starting sync..."
-          git checkout master
-          git checkout upstream/master -- .
-          git checkout HEAD -- .github/workflows
-          git checkout HEAD -- README.md
-
-          if [[ -n $(git status --porcelain) ]]; then
-            echo "Changes detected from upstream. Committing..."
-            git add .
-            git commit -m "chore: sync upstream changes (preserving workflows and README)"
-            git push origin master
-            echo "Sync success."
-          else
-            echo "No updates found from upstream (excluding protected files)."
-          fi
+          echo "[Error] 由于上游仓库的 workflow 文件变更，导致 GitHub 自动暂停了本次自动更新，你需要手动 Sync Fork 一次。"
+          exit 1
